@@ -11,7 +11,7 @@ namespace GraphQL.Entities.Joke
     {
         [UseApplicationDbContext]
         [UsePaging]
-        public IQueryable<Data.Joke> GetAddresses(
+        public IQueryable<Data.Joke> GetJokes(
             [ScopedService] ApplicationDbContext context) =>
             context.Jokes.OrderBy(t => t.Id);
     }

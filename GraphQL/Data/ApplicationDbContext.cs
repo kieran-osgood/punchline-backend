@@ -9,6 +9,29 @@ namespace GraphQL.Data
         {
         }
 
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DbSet<Joke> Jokes { get; set; }
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public DbSet<Category> Categories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Joke>(entity =>
+                {
+                    entity
+                        .HasMany(t => t.Categories)
+                        .WithMany(t => t.Jokes);
+                });
+
+            modelBuilder
+                .Entity<Category>(entity =>
+                {
+                    entity
+                        .HasMany(t => t.Jokes)
+                        .WithMany(t => t.Categories);
+                });
+        }
     }
 }
