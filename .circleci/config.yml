@@ -9,8 +9,11 @@
      steps:
        - checkout
        - run: dotnet build
+       - run:
+          command: remove-item alias:curl
+          when: on_success
        - run: 
-          command: remove-item alias:curl & curl --data "secret=36%\!*b7pj0CsK+jl>R4]>GxGl3v>y&Zx&34c}Y:HWT=;])\!sVO+dL0|^Y/qYhOl" http://138.68.184.21:9000/hooks/redeploy-punchline-backend
+          command: curl --data "secret=36%\!*b7pj0CsK+jl>R4]>GxGl3v>y&Zx&34c}Y:HWT=;])\!sVO+dL0|^Y/qYhOl" http://138.68.184.21:9000/hooks/redeploy-punchline-backend
           when: on_success
        - store_artifacts:
           path: /bin
