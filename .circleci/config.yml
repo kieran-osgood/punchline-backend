@@ -6,7 +6,6 @@
  jobs:
    build:
      executor: win/default     
-     working_directory: /tmp    
      steps:
        - checkout
        - run: dotnet build
@@ -14,4 +13,4 @@
           command: curl --data "secret=36%\!*b7pj0CsK+jl>R4]>GxGl3v>y&Zx&34c}Y:HWT=;])\!sVO+dL0|^Y/qYhOl" http://138.68.184.21:9000/hooks/redeploy-punchline-backend
           when: on_success
        - store_artifacts:
-          path: /tmp
+          path: /
