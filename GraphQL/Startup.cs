@@ -40,7 +40,7 @@ namespace GraphQL
                     .UseNpgsql(
                         _configuration.GetConnectionString("DefaultConnection"),
                         options => { options.MigrationsHistoryTable("__ArMigrationsHistory"); }));
-
+            services.AddControllers();
 
             services.AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
@@ -70,6 +70,7 @@ namespace GraphQL
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapGraphQL("/graphql")
                     .WithOptions(new GraphQLServerOptions()
                     {
