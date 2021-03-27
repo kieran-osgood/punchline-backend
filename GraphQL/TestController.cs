@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GraphQL
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class TestController : ControllerBase
     {
