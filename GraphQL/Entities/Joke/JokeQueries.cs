@@ -2,6 +2,7 @@ using System.Linq;
 using GraphQL.Data;
 using GraphQL.Extensions;
 using HotChocolate;
+using HotChocolate.Data;
 using HotChocolate.Types;
 
 namespace GraphQL.Entities.Joke
@@ -11,14 +12,11 @@ namespace GraphQL.Entities.Joke
     {
         [UseApplicationDbContext]
         [UsePaging]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<Data.Joke> GetJokes(
             [ScopedService] ApplicationDbContext context) =>
-            context.Jokes.OrderBy(t => t.Id);
+            context.Jokes;
 
-        [UseApplicationDbContext]
-        [UsePaging]
-        public IQueryable<Data.Joke> GetMoreJokes(
-            [ScopedService] ApplicationDbContext context) =>
-            context.Jokes.OrderBy(t => t.Id);
     }
 }
