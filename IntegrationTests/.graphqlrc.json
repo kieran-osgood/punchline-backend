@@ -6,7 +6,7 @@
       "name": "JokeClient",
       "url": "https://localhost:7001/graphql",
       "dependencyInjection": true,
-      "namespace" : "IntegrationTest",
+      "namespace" : "IntegrationTests",
       "outputDirectoryName" : "Generated"
     }
   }

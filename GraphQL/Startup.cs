@@ -6,10 +6,10 @@ using HotChocolate.AspNetCore;
 using HotChocolate.Types.Pagination;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace GraphQL
@@ -45,8 +45,8 @@ namespace GraphQL
             services.AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
                 .AddType<JokeQueries>()
+
                 .AddType<JokeType>()
-                .AddDataLoader<JokeByIdDataLoader>()
                 .AddFiltering()
                 .AddSorting()
                 .SetPagingOptions(new PagingOptions
@@ -55,7 +55,9 @@ namespace GraphQL
                     MaxPageSize = 500,
                     IncludeTotalCount = true
                 })
-                .EnableRelaySupport();
+                .EnableRelaySupport()
+                .AddDataLoader<JokeByIdDataLoader>()
+                ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
