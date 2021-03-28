@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Data;
@@ -60,10 +62,15 @@ namespace IntegrationTests
         {
             using var scope = _factory.Services.CreateScope();
             var dbpool = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
-            var requestExecutor = scope.ServiceProvider.GetRequiredService<IRequestExecutorBuilder>();
+            // var requestExecutor = scope.ServiceProvider.GetRequiredService<IRequestExecutorBuilder>();
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions()
+            {
+                BaseAddress = new Uri("http://localhost:5000/graphql")
+            });
             var context = dbpool.CreateDbContext();
-            
-            var response = await requestExecutor.ExecuteRequestAsync(@"
+
+            var response = await client.PostAsync("",
+                new StringContent(@"
 query Jokes {
   jokes(first: 2, where: {score: { gt: 3 }}) {
     nodes {
@@ -72,8 +79,9 @@ query Jokes {
     }
   }
 }
-");
-            var jokes = await context.Jokes.FirstOrDefaultAsync();
+"));
+            var jokes = await context.Jokes.ToListAsync();
+            // jokes.ToJson().MatchSnapshot();
         }
     }
 }
