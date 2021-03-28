@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace GraphQL.Types
 {
-    public class AddressType: ObjectType<Joke>
+    public class JokeType: ObjectType<Joke>
     {
         protected override void Configure(IObjectTypeDescriptor<Joke> descriptor)
         {
