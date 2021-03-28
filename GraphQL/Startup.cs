@@ -1,5 +1,6 @@
 using GraphQL.Data;
 using GraphQL.DataLoader;
+using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
@@ -47,6 +48,11 @@ namespace GraphQL
                 .AddType<JokeQueries>()
                 .AddType<JokeType>()
                 .AddDataLoader<JokeByIdDataLoader>()
+
+                .AddType<CategoryQueries>()
+                .AddType<CategoryType>()
+                .AddDataLoader<CategoryByIdDataLoader>()
+
                 .AddFiltering()
                 .AddSorting()
                 .SetPagingOptions(new PagingOptions
