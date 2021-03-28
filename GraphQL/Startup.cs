@@ -45,7 +45,7 @@ namespace GraphQL
             services.AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
                 .AddType<JokeQueries>()
-                .AddType<AddressType>()
+                .AddType<JokeType>()
                 .AddDataLoader<JokeByIdDataLoader>()
                 .AddFiltering()
                 .AddSorting()
