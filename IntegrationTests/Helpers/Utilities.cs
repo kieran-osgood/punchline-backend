@@ -24,7 +24,7 @@ namespace IntegrationTests.Helpers
         {
             return new List<Joke>
             {
-                new(){ Id = 1, Body = "TEST RECORD: You're standing on my scarf." },
+                new(){ Body = "TEST RECORD: You're standing on my scarf." },
                 new(){ Body = "TEST RECORD: Would you like a jelly baby?" },
                 new(){ Body = "TEST RECORD: To the rational mind, " +
                               "nothing is inexplicable; only unexplained." }

@@ -17,18 +17,13 @@ using Xunit;
 
 namespace IntegrationTests
 {
-    public class SchemaTest : IClassFixture<WebApplicationFactory<Startup>>
+    public class SchemaTest : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly WebApplicationFactory<Startup> _factory;
-        private readonly ApplicationDbContext _context;
+        private readonly CustomWebApplicationFactory<Startup> _factory;
 
-        public SchemaTest(WebApplicationFactory<Startup> factory)
+        public SchemaTest(CustomWebApplicationFactory<Startup> factory)
         {
             _factory = factory;
-
-            _context = _factory.Services.GetRequiredService<ApplicationDbContext>();
-           var test =   _factory.Services.GetRequiredService<IRequestExecutorBuilder>();
-
         }
 
         [Fact]
@@ -63,8 +58,22 @@ namespace IntegrationTests
         [Fact]
         public async Task Check_Something()
         {
-            var client = _factory.CreateClient();
-            var jokes = await _context.Jokes.FirstOrDefaultAsync(x => x.Id == 1);
+            using var scope = _factory.Services.CreateScope();
+            var dbpool = scope.ServiceProvider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
+            var requestExecutor = scope.ServiceProvider.GetRequiredService<IRequestExecutorBuilder>();
+            var context = dbpool.CreateDbContext();
+            
+            var response = await requestExecutor.ExecuteRequestAsync(@"
+query Jokes {
+  jokes(first: 2, where: {score: { gt: 3 }}) {
+    nodes {
+      id
+      body
+    }
+  }
+}
+");
+            var jokes = await context.Jokes.FirstOrDefaultAsync();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using GraphQL.Data;
+using GraphQL.DataLoader;
 using GraphQL.Entities.Joke;
 using GraphQL.Types;
 using HotChocolate.Execution;
@@ -27,7 +28,7 @@ namespace IntegrationTests
 
                 services.Remove(descriptor);
 
-                services.AddDbContext<ApplicationDbContext>(options =>
+                services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
                 });
@@ -38,6 +39,7 @@ namespace IntegrationTests
                     .AddQueryType(d => d.Name("Query"))
                     .AddTypeExtension<JokeQueries>()
                     .AddType<JokeType>()
+                    .AddType<JokeByIdDataLoader>()
                     .AddFiltering()
                     .AddSorting()
                     .SetPagingOptions(new PagingOptions
@@ -47,22 +49,21 @@ namespace IntegrationTests
                         IncludeTotalCount = true
                     })
                     .EnableRelaySupport()
-                    .BuildRequestExecutorAsync()
                     ;
                 var sp = services.BuildServiceProvider();
 
                 using (var scope = sp.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;
-                    var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+                    var db = scopedServices.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
                     var logger = scopedServices
                         .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
-
-                    db.Database.EnsureCreated();
+                    var context = db.CreateDbContext();
+                    context.Database.EnsureCreated();
 
                     try
                     {
-                        Utilities.InitializeDbForTests(db);
+                        Utilities.InitializeDbForTests(context);
                     }
                     catch (Exception ex)
                     {
