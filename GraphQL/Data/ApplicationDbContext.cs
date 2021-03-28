@@ -10,10 +10,10 @@ namespace GraphQL.Data
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public DbSet<Joke> Jokes { get; set; }
+        public DbSet<Joke> Jokes { get; set; } = default!;
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -6,11 +6,16 @@ namespace GraphQL.Data
     public class Joke
     {
         /*
-         * Fields
+         * Primary Key
          */
         public int Id { get; set; }
 
-        [Required] [StringLength(200)] public string Body { get; set; }
+        /*
+         * Fields
+         */
+        public string Title { get; set; } = "";
+        public string Body { get; set; } = "";
+        public int Score { get; set; }
 
         /**
          * Entity Mappings

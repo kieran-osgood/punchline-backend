@@ -7,11 +7,14 @@ namespace GraphQL.Data
     public class Category
     {
         /*
-         * Fields
+         * Primary Key
          */
         public int Id { get; set; }
 
-        [Required] [StringLength(30)] public string Name { get; set; }
+        /*
+         * Fields
+         */
+        public string Name { get; set; } = "";
 
         /**
          * Entity Mappings
