@@ -38,9 +38,8 @@ namespace GraphQL
                 x
                     .UseLoggerFactory(MyLoggerFactory)
                     .EnableDetailedErrors()
-                    .UseNpgsql(
-                        _configuration.GetConnectionString("DefaultConnection"),
-                        options => { options.MigrationsHistoryTable("__ArMigrationsHistory"); }));
+                    .UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
+
             services.AddControllers();
 
             services.AddGraphQLServer()
