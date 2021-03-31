@@ -1,10 +1,11 @@
-project =  --project GraphQL 
+project =  --project GraphQL
+PROJECT_DIR = GraphQL
 # Launch the Database
 up:
-	docker-compose --env-file .env up --no-recreate
+	cd ${PROJECT_DIR} && docker-compose --env-file .env up --no-recreate
 # Run the C# project
 run:
-	dotnet watch run  --project GraphQL
+	cd ${PROJECT_DIR} && dotnet watch run  --project GraphQL
 # `make db-migrate` will update to latest migration
 # `make db-migrate 0` will delete all tables and revert back to a zero migration state
 # `make db-migrate migration="20210104065856_InitialCreate"` will migration to specific migration by file name
