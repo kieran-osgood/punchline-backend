@@ -7,7 +7,7 @@ using HotChocolate.Types;
 
 namespace GraphQL.Entities.Category
 {
-    [ExtendObjectType(Name = "Query")]
+    [ExtendObjectType("Query")]
     public class CategoryQueries
     {
         [UseApplicationDbContext]

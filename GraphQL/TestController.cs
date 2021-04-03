@@ -1,22 +1,20 @@
 using System.Threading.Tasks;
 using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GraphQL
 {
-    [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
+    [ApiController]
     public class TestController : ControllerBase
     {
         public record TestRequest(string IdToken);
         [HttpPost]
-        public async Task<IActionResult> Test([FromBody]TestRequest req)
+        public IActionResult Test()
         {
-            FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance
-                .VerifyIdTokenAsync(req.IdToken);
-            string uid = decodedToken.Uid;
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-
+            var something = Request;
             return Ok(new {Message = "Success"});
         }
     }

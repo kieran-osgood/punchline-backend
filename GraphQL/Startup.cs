@@ -1,13 +1,18 @@
 using System;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using GraphQL.Authentication;
 using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
+using HotChocolate.Data;
+using HotChocolate.Data.Filters;
+using HotChocolate.Types;
 using HotChocolate.Types.Pagination;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GraphQL
 {
@@ -45,27 +51,31 @@ namespace GraphQL
 
             services.AddControllers();
 
+            services
+                .AddAuthentication(FirebaseAuthenticationOptions.SchemeName)
+                .AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(
+                    FirebaseAuthenticationOptions.SchemeName, null);
 
-            FirebaseApp.Create(new AppOptions()
+            FirebaseApp.Create(new AppOptions
             {
                 Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
             });
 
-            services.AddGraphQLServer()
+            services
+                .AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
                 .AddType<JokeQueries>()
-                .AddType<JokeType>()
-                .AddDataLoader<JokeByIdDataLoader>()
-
                 .AddType<CategoryQueries>()
+                .AddType<JokeType>()
                 .AddType<CategoryType>()
+                .AddDataLoader<JokeByIdDataLoader>()
                 .AddDataLoader<CategoryByIdDataLoader>()
-
-                .AddFiltering()
                 .AddSorting()
+                .AddFiltering()
+                .AddAuthorization()
                 .SetPagingOptions(new PagingOptions
                 {
-                    DefaultPageSize = 500,
+                    DefaultPageSize = 25,
                     MaxPageSize = 500,
                     IncludeTotalCount = true
                 })
@@ -81,6 +91,8 @@ namespace GraphQL
             }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
