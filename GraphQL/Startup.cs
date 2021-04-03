@@ -1,3 +1,6 @@
+using System;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
@@ -41,6 +44,12 @@ namespace GraphQL
                     .UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
+            });
 
             services.AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
