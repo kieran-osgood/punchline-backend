@@ -20,6 +20,7 @@ namespace GraphQL.Data
          * Entity Mappings
          */
         public virtual ICollection<Joke> Jokes { get; set; } = default!;
+        public virtual ICollection<User> Users { get; set; } = default!;
 
         /*
          * Unmapped Resolver Fields

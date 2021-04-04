@@ -10,6 +10,9 @@ namespace GraphQL.Data
         }
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        public DbSet<User> Users { get; set; } = default!;
+
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DbSet<Joke> Jokes { get; set; } = default!;
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
@@ -31,6 +34,18 @@ namespace GraphQL.Data
                     entity
                         .HasMany(t => t.Jokes)
                         .WithMany(t => t.Categories);
+                });
+
+            modelBuilder
+                .Entity<User>(entity =>
+                    {
+                        entity
+                            .HasMany(t => t.Jokes)
+                            .WithMany(t => t.Users);
+
+                        entity
+                            .HasMany(t => t.Categories)
+                                .WithMany(t => t.Users);
                 });
         }
     }
