@@ -7,6 +7,7 @@ using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.GraphQL;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
 using HotChocolate.Data;
@@ -66,10 +67,10 @@ namespace GraphQL
                 .AddGraphQLServer()
                 .AddHttpRequestInterceptor((context, executor, builder, token) =>
                 {
-                    builder.AddProperty(GlobalStates.HttpIdentityUser.Claims, context.User);
+                    builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
 
                     var userId = context.User.FindFirst(ClaimTypes.Sid)?.Value;
-                    builder.AddProperty(GlobalStates.HttpIdentityUser.UserId, userId);
+                    builder.AddProperty(GlobalStates.HttpContext.UserId, userId);
 
                     return default;
                 })

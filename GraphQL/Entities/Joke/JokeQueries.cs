@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FirebaseAdmin.Auth;
 using GraphQL.Data;
 using GraphQL.Extensions;
+using GraphQL.GraphQL;
 using HotChocolate;
 using HotChocolate.Data;
 using HotChocolate.Types;
@@ -32,7 +33,8 @@ namespace GraphQL.Entities.Joke
         [UseSorting]
         public async Task<IQueryable<Data.Joke>> GetJokes(
             [ScopedService] ApplicationDbContext context,
-            [GlobalState(Startup.GlobalStates.HttpIdentityUser.UserId)] string? userId,
+            [GlobalState(GlobalStates.HttpContext.UserId)]
+            string? userId,
             JokeLength jokeLength = JokeLength.Medium)
         {
             var length = (int) jokeLength;
