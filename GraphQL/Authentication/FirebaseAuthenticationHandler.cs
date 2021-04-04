@@ -68,7 +68,8 @@ namespace GraphQL.Authentication
                     new(ClaimTypes.Name, userRecord.DisplayName ?? ""),
                     new(ClaimTypes.Expiration, decodedToken.ExpirationTimeSeconds.ToString()),
                     new (ClaimTypes.Email, userRecord.Email ?? ""),
-                    new (ClaimTypes.GroupSid,UserGroups.User)
+                    new (ClaimTypes.GroupSid,UserGroups.User),
+                    new (CustomClaimTypes.PhotoUrl, userRecord.PhotoUrl)
                 };
             }
             catch (Exception e)
