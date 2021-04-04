@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using GraphQL.Authentication;
@@ -60,9 +61,18 @@ namespace GraphQL
             {
                 Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
             });
-
+            services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
+                .AddHttpRequestInterceptor((context, executor, builder, token) =>
+                {
+                    builder.AddProperty(GlobalStates.HttpIdentityUser.Claims, context.User);
+
+                    var userId = context.User.FindFirst(ClaimTypes.Sid)?.Value;
+                    builder.AddProperty(GlobalStates.HttpIdentityUser.UserId, userId);
+
+                    return default;
+                })
                 .AddQueryType(d => d.Name("Query"))
                 .AddType<JokeQueries>()
                 .AddType<CategoryQueries>()
