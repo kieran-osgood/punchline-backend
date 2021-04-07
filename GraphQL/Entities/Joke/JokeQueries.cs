@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using FirebaseAdmin.Auth;
 using GraphQL.Data;
 using GraphQL.Extensions;
-using GraphQL.GraphQL;
+using GraphQL.Repositories;
+using GraphQL.Static;
 using HotChocolate;
 using HotChocolate.Data;
 using HotChocolate.Types;
@@ -35,17 +36,14 @@ namespace GraphQL.Entities.Joke
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string? userUid,
+            [Service] CategoryRepository categoryRepository,
             JokeLength jokeLength = JokeLength.Medium)
         {
             var length = (int) jokeLength;
 
-            var categoryIds = await
-                (from u in context.Users
-                    from c in u.Categories
-                    where u.FirebaseUid == userId
-                    select c.Id).ToListAsync();
+            var categoryIds = await categoryRepository.GetCategoryIdsByUserUid(userUid);
 
-            if (categoryIds != null && categoryIds.Count > 0)
+            if (categoryIds.Count > 0)
             {
                 return from j in context.Jokes
                     from c in j.Categories.Where(x => categoryIds.Contains(x.Id))
