@@ -1,13 +1,14 @@
 using System.Linq;
 using GraphQL.Data;
 using GraphQL.Extensions;
+using GraphQL.Static;
 using HotChocolate;
 using HotChocolate.Data;
 using HotChocolate.Types;
 
 namespace GraphQL.Entities.Category
 {
-    [ExtendObjectType("Query")]
+    [ExtendObjectType(ObjectTypes.Query)]
     public class CategoryQueries
     {
         [UseApplicationDbContext]

@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL.Entities.Joke
 {
-    [ExtendObjectType("Query")]
+    [ExtendObjectType(ObjectTypes.Query)]
     public class JokeQueries
     {
         public enum JokeLength
