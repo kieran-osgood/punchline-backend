@@ -38,15 +38,32 @@ namespace GraphQL.Data
 
             modelBuilder
                 .Entity<User>(entity =>
-                    {
-                        entity
-                            .HasMany(t => t.Jokes)
-                            .WithMany(t => t.Users);
+                {
+                    entity
+                        .HasMany(t => t.Jokes)
+                        .WithMany(t => t.Users);
 
-                        entity
-                            .HasMany(t => t.Categories)
-                                .WithMany(t => t.Users);
+                    entity
+                        .HasMany(t => t.Categories)
+                        .WithMany(t => t.Users);
                 });
+
+            modelBuilder.Entity<User>()
+                .HasMany(p => p.Jokes)
+                .WithMany(p => p.Users)
+                .UsingEntity<UserJokeHistory>(
+                    x => x
+                        .HasOne(ujh => ujh.Joke)
+                        .WithMany(j => j.UserJokeHistories)
+                        .HasForeignKey(ujh => ujh.JokeId),
+                    x => x
+                        .HasOne(ujh => ujh.User)
+                        .WithMany(u => u.UserJokeHistories)
+                        .HasForeignKey(ujh => ujh.UserId),
+                    x =>
+                    {
+                        x.HasIndex(ujh => new {ujh.JokeId, ujh.UserId}).IsUnique();
+                    });
         }
     }
 }
