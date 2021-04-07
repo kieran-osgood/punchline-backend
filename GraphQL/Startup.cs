@@ -7,6 +7,8 @@ using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.Repositories.Category;
+using GraphQL.Static;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
 using HotChocolate.Data;
@@ -51,6 +53,7 @@ namespace GraphQL
                     .UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
 
             services
                 .AddAuthentication(FirebaseAuthenticationOptions.SchemeName)
