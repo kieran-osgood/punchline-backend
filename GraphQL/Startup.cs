@@ -7,7 +7,6 @@ using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
-using GraphQL.GraphQL;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
 using HotChocolate.Data;
@@ -70,7 +69,7 @@ namespace GraphQL
                     builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
 
                     var userId = context.User.FindFirst(ClaimTypes.Sid)?.Value;
-                    builder.AddProperty(GlobalStates.HttpContext.UserId, userId);
+                    builder.AddProperty(GlobalStates.HttpContext.UserUid, userId);
 
                     return default;
                 })

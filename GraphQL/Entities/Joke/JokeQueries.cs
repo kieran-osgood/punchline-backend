@@ -33,8 +33,8 @@ namespace GraphQL.Entities.Joke
         [UseSorting]
         public async Task<IQueryable<Data.Joke>> GetJokes(
             [ScopedService] ApplicationDbContext context,
-            [GlobalState(GlobalStates.HttpContext.UserId)]
-            string? userId,
+            [GlobalState(GlobalStates.HttpContext.UserUid)]
+            string? userUid,
             JokeLength jokeLength = JokeLength.Medium)
         {
             var length = (int) jokeLength;
