@@ -4,7 +4,14 @@ namespace GraphQL.Common
 {
     public enum ErrorCodes
     {
-        [Description(nameof(ServerError))] DuplicateEntry = 1,
-        [Description(nameof(DuplicateEntry))] ServerError = 0,
+        [Description(
+            "Unknown Server Error - Please refresh and contact your system administator if the issues persists")]
+        ServerError = 0,
+
+        [Description("Error updating database - duplicate record exists")]
+        DuplicateEntry = 1,
+
+        [Description("Couldn't locate the resource requested")]
+        ResourceNotFound = 2,
     }
 }

@@ -56,11 +56,11 @@ namespace GraphQL.Entities.UserJokeHistory
                 var joke = await context.Jokes.FirstOrDefaultAsync(x => x.Id == input.JokeId, cancellationToken);
                 var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == userUid, cancellationToken);
 
-                // if (joke == null || user == null)
-                // {
-                    // return new RateJokePayload(new List<UserError>
-                        // {new("Could not locate Joke and/or User", "CANNOT_PROCESS_REQUEST")});
-                // }
+                if (joke == null || user == null)
+                {
+                    return new RateJokePayload(new List<UserError>
+                        {new(ErrorCodes.ResourceNotFound)});
+                }
 
                 var userJokeHistory = new Data.UserJokeHistory
                 {
@@ -77,13 +77,13 @@ namespace GraphQL.Entities.UserJokeHistory
             {
                 _logger.LogError("{Message}", e.ToString());
                 return new RateJokePayload(new List<UserError>
-                    {new(ErrorMessages.DuplicateEntry, ErrorCodes.DuplicateEntry)});
+                    {new(ErrorCodes.DuplicateEntry)});
             }
             catch (Exception e)
             {
                 _logger.LogError("{Message}", e.ToString());
                 return new RateJokePayload(new List<UserError>
-                    {new(ErrorMessages.ServerError, ErrorCodes.ServerError)});
+                    {new(ErrorCodes.ServerError)});
             }
         }
     }
