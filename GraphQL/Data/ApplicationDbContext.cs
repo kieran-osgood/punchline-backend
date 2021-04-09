@@ -17,6 +17,7 @@ namespace GraphQL.Data
 
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public DbSet<Category> Categories { get; set; } = default!;
+        public DbSet<UserJokeHistory> UserJokeHistory { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -20,7 +20,7 @@ namespace GraphQL.Data
         /**
          * Entity Mappings
          */
-        public List<UserJokeHistory> UserJokeHistories { get; set; } = default!;
+        public List<UserJokeHistory> UserJokeHistories { get; set; } = new();
         public virtual ICollection<Category> Categories { get; set; } = default!;
         public virtual ICollection<User> Users { get; set; } = default!;
 

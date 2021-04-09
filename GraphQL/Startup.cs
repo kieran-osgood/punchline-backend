@@ -7,6 +7,7 @@ using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.Entities.UserJokeHistory;
 using GraphQL.Repositories.Category;
 using GraphQL.Static;
 using GraphQL.Types;
@@ -64,6 +65,7 @@ namespace GraphQL
             {
                 Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
             });
+
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
@@ -76,13 +78,20 @@ namespace GraphQL
 
                     return default;
                 })
-                .AddQueryType(d => d.Name("Query"))
+                .AddQueryType(d => d.Name(ObjectTypes.Query))
                 .AddType<JokeQueries>()
                 .AddType<CategoryQueries>()
+                .AddType<UserJokeHistoryQueries>()
+
+                .AddMutationType(d => d.Name(ObjectTypes.Mutation))
+
                 .AddType<JokeType>()
                 .AddType<CategoryType>()
+                .AddType<UserJokeHistoryMutations>()
+
                 .AddDataLoader<JokeByIdDataLoader>()
                 .AddDataLoader<CategoryByIdDataLoader>()
+
                 .AddSorting()
                 .AddFiltering()
                 .AddAuthorization()
