@@ -21,12 +21,19 @@ namespace GraphQL.Data
          * Entity Mappings
          */
         public List<UserJokeHistory> UserJokeHistories { get; set; } = new();
+
         public virtual ICollection<Category> Categories { get; set; } = default!;
         public virtual ICollection<User> Users { get; set; } = default!;
 
         /*
          * Unmapped Resolver Fields
          */
+    }
 
+    public enum JokeLength
+    {
+        Small = 175,
+        Medium = 400,
+        Large = 5000
     }
 }
