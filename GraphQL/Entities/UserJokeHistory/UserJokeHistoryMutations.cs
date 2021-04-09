@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using GraphQL.Common;
@@ -9,7 +8,6 @@ using GraphQL.Extensions;
 using GraphQL.Static;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ErrorCodes = GraphQL.Common.ErrorCodes;
@@ -26,21 +24,9 @@ namespace GraphQL.Entities.UserJokeHistory
             _logger = logger.CreateLogger<UserJokeHistoryMutations>();
         }
 
-        public record RateJokeInput([ID(nameof(Joke))] int JokeId, RatingValue Rating, bool Bookmarked = false);
 
-        public enum TestEnum
-        {
-            [Description("The A")]
-            A = 1
-        }
-
-        private string? TestFunction(TestEnum a)
-        {
-            var something = a.GetValueAsString();
-            return something;
-        }
-        [UseApplicationDbContext]
         // [Authorize]
+        [UseApplicationDbContext]
         public async Task<RateJokePayload> RateJoke(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
@@ -49,8 +35,6 @@ namespace GraphQL.Entities.UserJokeHistory
             CancellationToken cancellationToken
         )
         {
-            var something = TestEnum.A;
-            var another = TestFunction(something);
             try
             {
                 var joke = await context.Jokes.FirstOrDefaultAsync(x => x.Id == input.JokeId, cancellationToken);
