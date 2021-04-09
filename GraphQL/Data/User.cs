@@ -19,7 +19,8 @@ namespace GraphQL.Data
          */
         public int JokeCount { get; set; }
         public string Name { get; set; } = "";
-
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
+        public DateTime LastLogin { get; set; } = DateTime.Now;
         /**
          * Entity Mappings
          */
