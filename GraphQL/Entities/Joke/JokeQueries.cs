@@ -28,7 +28,7 @@ namespace GraphQL.Entities.Joke
         }
 
         [UseApplicationDbContext]
-        [Authorize]
+        // [Authorize]
         [UsePaging]
         [UseFiltering]
         [UseSorting]
@@ -40,7 +40,6 @@ namespace GraphQL.Entities.Joke
             JokeLength jokeLength = JokeLength.Medium)
         {
             var length = (int) jokeLength;
-
             var categoryIds = await categoryRepository.GetCategoryIdsByUserUid(userUid);
 
             if (categoryIds.Count > 0)
