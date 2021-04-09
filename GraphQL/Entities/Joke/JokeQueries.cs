@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using FirebaseAdmin.Auth;
 using GraphQL.Data;
 using GraphQL.Extensions;
-using GraphQL.Repositories;
+using GraphQL.Repositories.Category;
 using GraphQL.Static;
 using HotChocolate;
 using HotChocolate.Data;
@@ -36,7 +36,7 @@ namespace GraphQL.Entities.Joke
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string? userUid,
-            [Service] CategoryRepository categoryRepository,
+            [Service] ICategoryRepository categoryRepository,
             JokeLength jokeLength = JokeLength.Medium)
         {
             var length = (int) jokeLength;
