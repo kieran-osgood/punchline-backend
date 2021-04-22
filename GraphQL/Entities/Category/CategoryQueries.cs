@@ -12,7 +12,7 @@ namespace GraphQL.Entities.Category
     [ExtendObjectType(ObjectTypes.Query)]
     public class CategoryQueries
     {
-        // [Authorize]
+        [Authorize]
         [UseApplicationDbContext]
         [UsePaging]
         [UseFiltering]
@@ -20,6 +20,5 @@ namespace GraphQL.Entities.Category
         public IQueryable<Data.Category> GetCategories(
             [ScopedService] ApplicationDbContext context) =>
             context.Categories;
-
     }
 }

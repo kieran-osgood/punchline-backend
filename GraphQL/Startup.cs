@@ -7,16 +7,13 @@ using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.Entities.User;
 using GraphQL.Entities.UserJokeHistory;
 using GraphQL.Repositories.Category;
 using GraphQL.Static;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
-using HotChocolate.Data;
-using HotChocolate.Data.Filters;
-using HotChocolate.Types;
 using HotChocolate.Types.Pagination;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +21,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace GraphQL
 {
@@ -88,6 +84,7 @@ namespace GraphQL
                 .AddType<JokeType>()
                 .AddType<CategoryType>()
                 .AddType<UserJokeHistoryMutations>()
+                .AddType<UserMutations>()
 
                 .AddDataLoader<JokeByIdDataLoader>()
                 .AddDataLoader<CategoryByIdDataLoader>()
