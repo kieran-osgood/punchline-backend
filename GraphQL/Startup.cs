@@ -10,7 +10,7 @@ using GraphQL.Entities.Joke;
 using GraphQL.Entities.User;
 using GraphQL.Entities.UserJokeHistory;
 using GraphQL.Repositories.Category;
-using GraphQL.Static;
+using static GraphQL.Static.ObjectTypes;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
 using HotChocolate.Types.Pagination;
@@ -74,12 +74,12 @@ namespace GraphQL
 
                     return default;
                 })
-                .AddQueryType(d => d.Name(ObjectTypes.Query))
+                .AddQueryType(d => d.Name(Query))
                 .AddType<JokeQueries>()
                 .AddType<CategoryQueries>()
                 .AddType<UserJokeHistoryQueries>()
 
-                .AddMutationType(d => d.Name(ObjectTypes.Mutation))
+                .AddMutationType(d => d.Name(Mutation))
 
                 .AddType<JokeType>()
                 .AddType<CategoryType>()
