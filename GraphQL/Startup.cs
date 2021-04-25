@@ -80,14 +80,16 @@ namespace GraphQL
                 .AddType<UserJokeHistoryQueries>()
 
                 .AddMutationType(d => d.Name(Mutation))
-
-                .AddType<JokeType>()
-                .AddType<CategoryType>()
                 .AddType<UserJokeHistoryMutations>()
                 .AddType<UserMutations>()
 
+                .AddType<JokeType>()
+                .AddType<CategoryType>()
+                .AddType<UserJokeHistoryType>()
+
                 .AddDataLoader<JokeByIdDataLoader>()
                 .AddDataLoader<CategoryByIdDataLoader>()
+                .AddDataLoader<UserJokeHistoryByIdDataLoader>()
 
                 .AddSorting()
                 .AddFiltering()
