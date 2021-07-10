@@ -15,6 +15,7 @@ namespace GraphQL.Data
          * Fields
          */
         public string Name { get; set; } = "";
+        public string Image { get; set; } = "";
 
         /**
          * Entity Mappings
