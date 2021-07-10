@@ -62,5 +62,32 @@ namespace GraphQL.Entities.User
                 return new UserPayload(new List<UserError> {new(ErrorCodes.ServerError)});
             }
         }
+
+        [UseApplicationDbContext]
+        public async Task<UserPayload> CompleteOnboarding(
+            [ScopedService] ApplicationDbContext context,
+            UserLoginInput input,
+            CancellationToken cancellationToken
+        )
+        {
+            try
+            {
+                var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == input.FirebaseUid,
+                    cancellationToken);
+        
+                if (user is null) 
+                    throw new Exception($"Unable to locate user: {input.FirebaseUid}");
+        
+                user.OnboardingComplete = true;
+                
+                await context.SaveChangesAsync(cancellationToken);
+                return new UserPayload(user);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("{Message}", e.ToString());
+                return new UserPayload(new List<UserError> {new(ErrorCodes.ServerError)});
+            }
+        }
     }
 }

@@ -21,6 +21,8 @@ namespace GraphQL.Data
         public string Name { get; set; } = "";
         public DateTime CreatedOn { get; set; } = DateTime.Now;
         public DateTime LastLogin { get; set; } = DateTime.Now;
+        public bool OnboardingComplete { get; set; } = false;
+
         /**
          * Entity Mappings
          */
