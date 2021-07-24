@@ -57,7 +57,6 @@ namespace GraphQL.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -80,7 +79,13 @@ namespace GraphQL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Score")
+                    b.Property<int>("NegativeRating")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PositiveRating")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SkipRating")
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")

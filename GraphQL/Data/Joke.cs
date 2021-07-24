@@ -15,7 +15,9 @@ namespace GraphQL.Data
          */
         public string Title { get; set; } = "";
         public string Body { get; set; } = "";
-        public int Score { get; set; }
+        public int PositiveRating { get; set; } = 0;
+        public int NegativeRating { get; set; } = 0;
+        public int SkipRating { get; set; } = 0;
 
         /**
          * Entity Mappings
