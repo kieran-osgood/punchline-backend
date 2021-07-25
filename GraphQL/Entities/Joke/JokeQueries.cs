@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GraphQL.Data;
@@ -8,6 +10,7 @@ using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 
 namespace GraphQL.Entities.Joke
 {
@@ -19,21 +22,21 @@ namespace GraphQL.Entities.Joke
         [UsePaging]
         [UseFiltering]
         [UseSorting]
-        public async Task<IQueryable<Data.Joke>> GetJokes(
+        public IQueryable<Data.Joke> GetJokes(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string? userUid,
             [Service] ICategoryRepository categoryRepository,
-            JokeLength jokeLength = JokeLength.Medium)
+            JokeLength jokeLength = JokeLength.Medium, 
+            [ID(nameof(Data.Category))] List< int> blockedCategoryIds = default!)
         {
             // Casting to variable because of upstream bug: https://github.com/npgsql/efcore.pg/issues/1281
             var length = (int) jokeLength;
-            var categoryIds = await categoryRepository.GetCategoryIdsByUserUid(userUid);
-
-            // Monitor this for performance - nested NOT (EXIST) - top level join may be better
+            
+            // TODO Monitor this for performance - nested NOT (EXIST) - top level join may be better
             return (from j in context.Jokes
                 where j.Body.Length < length
-                from c in j.Categories.Where(x => categoryIds.Count <= 0 || categoryIds.Contains(x.Id))
+                from c in j.Categories.Where(x => blockedCategoryIds.Count <= 0 || !blockedCategoryIds.Contains(x.Id))
                 where !context.UserJokeHistory.Any(x => x.JokeId == j.Id)
                 select j).Distinct();
         }

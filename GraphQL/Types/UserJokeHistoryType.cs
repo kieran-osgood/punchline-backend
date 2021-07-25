@@ -22,6 +22,11 @@ namespace GraphQL.Types
                 .Field(t => t.Joke)
                 .ResolveWith<FavoritePracticeResolvers>(t => t.GetJokeAsync(default!, default!, default!))
                 .Name("joke");
+            
+            descriptor
+                .Field(t => t.User)
+                .ResolveWith<FavoritePracticeResolvers>(t => t.GetUserAsync(default!, default!, default!))
+                .Name("user");
         }
 
         private class FavoritePracticeResolvers
@@ -31,6 +36,12 @@ namespace GraphQL.Types
                 JokeByIdDataLoader dataLoader,
                 CancellationToken cancellationToken) =>
                 await dataLoader.LoadAsync(userJokeHistory.JokeId, cancellationToken);
+            
+            public async Task<User> GetUserAsync(
+                UserJokeHistory userJokeHistory,
+                UserByIdDataLoader dataLoader,
+                CancellationToken cancellationToken) =>
+                await dataLoader.LoadAsync(userJokeHistory.UserId, cancellationToken);
         }
     }
 }

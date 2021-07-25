@@ -17,7 +17,7 @@ namespace GraphQL.Data
         /*
          * Fields
          */
-        [ID(nameof(UserJokeHistory))] public int Id { get; set; }
+        public int Id { get; set; }
         public bool Bookmarked { get; set; }
         public RatingValue Rating { get; set; }
 
@@ -25,8 +25,8 @@ namespace GraphQL.Data
          * Entity Mappings
          */
         [ID(nameof(User))] [GraphQLIgnore] public int UserId { get; set; }
-
         public User User { get; set; } = default!;
+        
         [ID(nameof(Joke))] [GraphQLIgnore] public int JokeId { get; set; }
         public Joke Joke { get; set; } = default!;
 
