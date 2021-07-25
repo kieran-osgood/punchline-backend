@@ -7,7 +7,9 @@ using GraphQL.Data;
 using GraphQL.Extensions;
 using GraphQL.Static;
 using HotChocolate;
+using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
+using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ErrorCodes = GraphQL.Common.ErrorCodes;
@@ -25,9 +27,9 @@ namespace GraphQL.Entities.UserJokeHistory
         }
 
 
-        // [Authorize]
+        [Authorize]
         [UseApplicationDbContext]
-        public async Task<RateJokePayload> RateJoke(
+        public async Task<MutateUserJokeHistoryPayload> RateJoke(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string userUid,
@@ -42,7 +44,7 @@ namespace GraphQL.Entities.UserJokeHistory
 
                 if (joke == null || user == null)
                 {
-                    return new RateJokePayload(new List<UserError>
+                    return new MutateUserJokeHistoryPayload(new List<UserError>
                         {new(ErrorCodes.ResourceNotFound)});
                 }
 
@@ -55,18 +57,59 @@ namespace GraphQL.Entities.UserJokeHistory
                 };
                 user.UserJokeHistories.Add(userJokeHistory);
                 await context.SaveChangesAsync(cancellationToken);
-                return new RateJokePayload(userJokeHistory);
+                return new MutateUserJokeHistoryPayload(userJokeHistory);
             }
             catch (DbUpdateException e)
             {
                 _logger.LogError("{Message}", e.ToString());
-                return new RateJokePayload(new List<UserError>
+                return new MutateUserJokeHistoryPayload(new List<UserError>
                     {new(ErrorCodes.DuplicateEntry)});
             }
             catch (Exception e)
             {
                 _logger.LogError("{Message}", e.ToString());
-                return new RateJokePayload(new List<UserError>
+                return new MutateUserJokeHistoryPayload(new List<UserError>
+                    {new(ErrorCodes.ServerError)});
+            }
+        }
+
+
+        [Authorize]
+        [UseApplicationDbContext]
+        public async Task<MutateUserJokeHistoryPayload> DeleteBookmark(
+            [ScopedService] ApplicationDbContext context,
+            [GlobalState(GlobalStates.HttpContext.UserUid)]
+            string userUid,
+            [ID(nameof(Data.UserJokeHistory))] int id,
+            CancellationToken cancellationToken
+        )
+        {
+            try
+            {
+                var userJokeHistory =
+                    await context.UserJokeHistory.Include(x=>x.User).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+                if (userJokeHistory == null)
+                {
+                    return new MutateUserJokeHistoryPayload(new List<UserError>
+                        {new(ErrorCodes.ResourceNotFound)});
+                }
+
+                if (userJokeHistory.User.FirebaseUid != userUid)
+                {
+                    return new MutateUserJokeHistoryPayload(new List<UserError>
+                        {new(ErrorCodes.NotAuthorized)});
+                }
+
+                context.UserJokeHistory.Remove(userJokeHistory);
+
+                await context.SaveChangesAsync(cancellationToken);
+                return new MutateUserJokeHistoryPayload(userJokeHistory);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("{Message}", e.ToString());
+                return new MutateUserJokeHistoryPayload(new List<UserError>
                     {new(ErrorCodes.ServerError)});
             }
         }

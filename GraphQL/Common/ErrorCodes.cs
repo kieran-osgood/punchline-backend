@@ -13,5 +13,8 @@ namespace GraphQL.Common
 
         [Description("Couldn't locate the resource requested")]
         ResourceNotFound = 2,
+        
+        [Description("Resource belongs to another user")]
+        NotAuthorized = 3,
     }
 }
