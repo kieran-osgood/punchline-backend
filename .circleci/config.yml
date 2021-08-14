@@ -9,8 +9,8 @@
      steps:
        - checkout
        - run: dotnet build
-       - run:
-          command: remove-item alias:curl; curl https://punch-line.co.uk/hooks/redeploy-punchline-backend
-          when: on_success
+      #  - run:
+          # command: remove-item alias:curl; curl https://punch-line.co.uk/hooks/redeploy-punchline-backend
+          # when: on_success
        - store_artifacts:
           path: /bin
