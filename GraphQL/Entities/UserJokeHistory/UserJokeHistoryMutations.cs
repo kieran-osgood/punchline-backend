@@ -76,7 +76,7 @@ namespace GraphQL.Entities.UserJokeHistory
 
         [Authorize]
         [UseApplicationDbContext]
-        public async Task<MutateUserJokeHistoryPayload> DeleteBookmark(
+        public async Task<MutateUserJokeHistoryPayload> DeleteUserJokeHistory(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string userUid,
