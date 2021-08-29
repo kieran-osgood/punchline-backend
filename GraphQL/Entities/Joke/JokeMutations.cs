@@ -53,6 +53,7 @@ namespace GraphQL.Entities.Joke
                     Rating = RatingValue.Reported,
                     Joke = joke,
                     User = user,
+                    CreatedAt = DateTime.Now
                 };
                 
                 user.UserJokeHistories.Add(userJokeHistory);

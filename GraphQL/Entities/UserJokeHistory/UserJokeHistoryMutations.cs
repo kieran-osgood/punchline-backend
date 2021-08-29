@@ -54,6 +54,7 @@ namespace GraphQL.Entities.UserJokeHistory
                     Rating = input.Rating,
                     Joke = joke,
                     User = user,
+                    CreatedAt = DateTime.Now
                 };
                 user.UserJokeHistories.Add(userJokeHistory);
                 await context.SaveChangesAsync(cancellationToken);
