@@ -26,7 +26,7 @@ namespace GraphQL.Entities.UserJokeHistory
             _logger = logger.CreateLogger<UserJokeHistoryMutations>();
         }
 
-
+        public record RateJokeInput([ID(nameof(Joke))] int JokeId, RatingValue Rating, bool Bookmarked = false);
         [Authorize]
         [UseApplicationDbContext]
         public async Task<MutateUserJokeHistoryPayload> RateJoke(
@@ -87,7 +87,8 @@ namespace GraphQL.Entities.UserJokeHistory
             try
             {
                 var userJokeHistory =
-                    await context.UserJokeHistory.Include(x=>x.User).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+                    await context.UserJokeHistory.Include(x => x.User)
+                        .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
                 if (userJokeHistory == null)
                 {

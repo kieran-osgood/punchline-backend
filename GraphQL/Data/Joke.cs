@@ -19,7 +19,8 @@ namespace GraphQL.Data
         public int PositiveRating { get; set; } = 0;
         public int NegativeRating { get; set; } = 0;
         public int SkipRating { get; set; } = 0;
-
+        public int ReportCount { get; set; } = 0;
+        
         /**
          * Entity Mappings
          */

@@ -39,7 +39,8 @@ namespace GraphQL.Entities.UserJokeHistory
                 from u in context.Users
                 where
                     u.FirebaseUid == userUid &
-                    u.Id == ujh.UserId
+                    u.Id == ujh.UserId &
+                    ujh.Rating != RatingValue.Reported
                 select ujh;
         }
     }
