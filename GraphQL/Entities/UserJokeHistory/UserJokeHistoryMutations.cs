@@ -113,5 +113,50 @@ namespace GraphQL.Entities.UserJokeHistory
                     {new(ErrorCodes.ServerError)});
             }
         }
+
+        public record UpdateBookmarkInput([ID(nameof(Data.UserJokeHistory))] int Id, RatingValue? Rating,
+            bool? Bookmarked = false);
+
+        [Authorize]
+        [UseApplicationDbContext]
+        public async Task<MutateUserJokeHistoryPayload> UpdateUserJokeHistory(
+            [ScopedService] ApplicationDbContext context,
+            [GlobalState(GlobalStates.HttpContext.UserUid)]
+            string userUid,
+            UpdateBookmarkInput input,
+            CancellationToken cancellationToken
+        )
+        {
+            try
+            {
+                var userJokeHistory =
+                    await context.UserJokeHistory.Include(x => x.User)
+                        .FirstOrDefaultAsync(x => x.Id == input.Id, cancellationToken);
+
+                if (userJokeHistory == null)
+                {
+                    return new MutateUserJokeHistoryPayload(new List<UserError>
+                        {new(ErrorCodes.ResourceNotFound)});
+                }
+
+                if (userJokeHistory.User.FirebaseUid != userUid)
+                {
+                    return new MutateUserJokeHistoryPayload(new List<UserError>
+                        {new(ErrorCodes.NotAuthorized)});
+                }
+                
+                if (input.Rating is not null) userJokeHistory.Rating = (RatingValue) input.Rating;
+                if (input.Bookmarked != null) userJokeHistory.Bookmarked= (bool) input.Bookmarked;
+
+                await context.SaveChangesAsync(cancellationToken);
+                return new MutateUserJokeHistoryPayload(userJokeHistory);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("{Message}", e.ToString());
+                return new MutateUserJokeHistoryPayload(new List<UserError>
+                    {new(ErrorCodes.ServerError)});
+            }
+        }
     }
 }
