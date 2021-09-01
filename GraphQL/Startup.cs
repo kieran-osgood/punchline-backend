@@ -1,16 +1,25 @@
+using System;
+using System.Security.Claims;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using GraphQL.Authentication;
 using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.Entities.User;
+using GraphQL.Entities.UserJokeHistory;
+using GraphQL.Repositories.Category;
+using static GraphQL.Static.ObjectTypes;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
 using HotChocolate.Types.Pagination;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace GraphQL
@@ -41,26 +50,59 @@ namespace GraphQL
                     .UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
 
-            services.AddGraphQLServer()
-                .AddQueryType(d => d.Name("Query"))
+            services
+                .AddAuthentication(FirebaseAuthenticationOptions.SchemeName)
+                .AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(
+                    FirebaseAuthenticationOptions.SchemeName, null);
+
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
+            });
+
+            services.AddHttpContextAccessor();
+            services
+                .AddGraphQLServer()
+                .AddHttpRequestInterceptor((context, executor, builder, token) =>
+                {
+                    builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
+
+                    var userId = context.User.FindFirst(ClaimTypes.Sid)?.Value;
+                    builder.AddProperty(GlobalStates.HttpContext.UserUid, userId);
+
+                    return default;
+                })
+                .AddQueryType(d => d.Name(Query))
                 .AddType<JokeQueries>()
-                .AddType<JokeType>()
-                .AddDataLoader<JokeByIdDataLoader>()
-
                 .AddType<CategoryQueries>()
-                .AddType<CategoryType>()
-                .AddDataLoader<CategoryByIdDataLoader>()
+                .AddType<UserJokeHistoryQueries>()
 
-                .AddFiltering()
+                .AddMutationType(d => d.Name(Mutation))
+                .AddType<UserJokeHistoryMutations>()
+                .AddType<UserMutations>()
+
+                .AddType<JokeType>()
+                .AddType<CategoryType>()
+                .AddType<UserJokeHistoryType>()
+
+                .AddDataLoader<JokeByIdDataLoader>()
+                .AddDataLoader<CategoryByIdDataLoader>()
+                .AddDataLoader<UserJokeHistoryByIdDataLoader>()
+
                 .AddSorting()
+                .AddFiltering()
+                .AddAuthorization()
                 .SetPagingOptions(new PagingOptions
                 {
-                    DefaultPageSize = 500,
+                    DefaultPageSize = 25,
                     MaxPageSize = 500,
                     IncludeTotalCount = true
                 })
-                .EnableRelaySupport();
+                .EnableRelaySupport()
+                .AddDataLoader<JokeByIdDataLoader>()
+                ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +114,8 @@ namespace GraphQL
             }
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

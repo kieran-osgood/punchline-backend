@@ -15,11 +15,13 @@ namespace GraphQL.Data
          * Fields
          */
         public string Name { get; set; } = "";
+        public string? Image { get; set; } = "";
 
         /**
          * Entity Mappings
          */
         public virtual ICollection<Joke> Jokes { get; set; } = default!;
+        public virtual ICollection<User> Users { get; set; } = default!;
 
         /*
          * Unmapped Resolver Fields
