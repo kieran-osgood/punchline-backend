@@ -1,8 +1,0 @@
-query Jokes {
-    jokes(first: 2, where: {score: { gt: 3 }}) {
-        nodes {
-            id
-            body
-        }
-    }
-}

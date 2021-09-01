@@ -2,9 +2,12 @@ using System;
 using System.Linq;
 using GraphQL.Data;
 using GraphQL.DataLoader;
+using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.Entities.User;
+using GraphQL.Entities.UserJokeHistory;
+using GraphQL.Static;
 using GraphQL.Types;
-using HotChocolate.Execution;
 using HotChocolate.Types.Pagination;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Hosting;
@@ -33,25 +36,6 @@ namespace IntegrationTests
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
                 });
 
-
-                services
-                    .AddGraphQL()
-                    .AddQueryType(d => d.Name("Query"))
-                    .AddTypeExtension<JokeQueries>()
-                    .AddType<JokeType>()
-                    .AddType<JokeByIdDataLoader>()
-                    .AddType<Category>()
-                    .AddType<CategoryByIdDataLoader>()
-                    .AddFiltering()
-                    .AddSorting()
-                    .SetPagingOptions(new PagingOptions
-                    {
-                        DefaultPageSize = 500,
-                        MaxPageSize = 500,
-                        IncludeTotalCount = true
-                    })
-                    .EnableRelaySupport()
-                    ;
                 var sp = services.BuildServiceProvider();
 
                 using (var scope = sp.CreateScope())
