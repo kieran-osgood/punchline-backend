@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,9 +5,7 @@ using System.Threading.Tasks;
 using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Extensions;
-using GreenDonut;
 using HotChocolate;
-using HotChocolate.Resolvers;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +37,7 @@ namespace GraphQL.Types
         private class JokeResolvers
         {
             public async Task<IEnumerable<Category>> GetCategoriesAsync(
-                Joke joke,
+                [Parent] Joke joke,
                 CategoryByIdDataLoader dataLoader,
                 [ScopedService] ApplicationDbContext dbContext,
                 CancellationToken cancellationToken)

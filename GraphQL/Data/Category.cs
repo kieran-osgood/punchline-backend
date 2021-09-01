@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GraphQL.Data
 {
@@ -26,5 +27,7 @@ namespace GraphQL.Data
         /*
          * Unmapped Resolver Fields
          */
+        [NotMapped]
+        public virtual Joke Joke { get; set; } = default!;
     }
 }

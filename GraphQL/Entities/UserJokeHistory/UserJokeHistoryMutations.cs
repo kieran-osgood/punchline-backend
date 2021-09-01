@@ -26,7 +26,7 @@ namespace GraphQL.Entities.UserJokeHistory
             _logger = logger.CreateLogger<UserJokeHistoryMutations>();
         }
 
-        public record RateJokeInput([ID(nameof(Joke))] int JokeId, RatingValue Rating, bool Bookmarked = false);
+        public record RateJokeInput([property: ID(nameof(Joke))] int JokeId, RatingValue Rating, bool Bookmarked = false);
         [Authorize]
         [UseApplicationDbContext]
         public async Task<MutateUserJokeHistoryPayload> RateJoke(
@@ -116,7 +116,7 @@ namespace GraphQL.Entities.UserJokeHistory
             }
         }
 
-        public record UpdateBookmarkInput([ID(nameof(Data.UserJokeHistory))] int Id, RatingValue? Rating,
+        public record UpdateBookmarkInput([property: ID(nameof(Data.UserJokeHistory))] int Id, RatingValue? Rating,
             bool? Bookmarked = false);
 
         [Authorize]

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using GraphQL.Data;
 using GreenDonut;
-using HotChocolate.DataLoader;
 using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL.DataLoader

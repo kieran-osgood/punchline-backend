@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Extensions;
+using HotChocolate;
 using HotChocolate.Resolvers;
 using HotChocolate.Types;
 
@@ -20,25 +21,25 @@ namespace GraphQL.Types
 
             descriptor
                 .Field(t => t.Joke)
-                .ResolveWith<FavoritePracticeResolvers>(t => t.GetJokeAsync(default!, default!, default!))
+                .ResolveWith<UserJokeHistoryResolvers>(t => t.GetJokeAsync(default!, default!, default!))
                 .Name("joke");
             
             descriptor
                 .Field(t => t.User)
-                .ResolveWith<FavoritePracticeResolvers>(t => t.GetUserAsync(default!, default!, default!))
+                .ResolveWith<UserJokeHistoryResolvers>(t => t.GetUserAsync(default!, default!, default!))
                 .Name("user");
         }
 
-        private class FavoritePracticeResolvers
+        private class UserJokeHistoryResolvers
         {
             public async Task<Joke> GetJokeAsync(
-                UserJokeHistory userJokeHistory,
+                [Parent] UserJokeHistory userJokeHistory,
                 JokeByIdDataLoader dataLoader,
                 CancellationToken cancellationToken) =>
                 await dataLoader.LoadAsync(userJokeHistory.JokeId, cancellationToken);
             
             public async Task<User> GetUserAsync(
-                UserJokeHistory userJokeHistory,
+                [Parent] UserJokeHistory userJokeHistory,
                 UserByIdDataLoader dataLoader,
                 CancellationToken cancellationToken) =>
                 await dataLoader.LoadAsync(userJokeHistory.UserId, cancellationToken);

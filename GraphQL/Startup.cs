@@ -65,6 +65,7 @@ namespace GraphQL
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
+                .SetPagingOptions(new PagingOptions{ InferConnectionNameFromField = false })
                 .AddHttpRequestInterceptor((context, executor, builder, token) =>
                 {
                     builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
@@ -100,7 +101,6 @@ namespace GraphQL
                     MaxPageSize = 500,
                     IncludeTotalCount = true
                 })
-                .EnableRelaySupport()
                 .AddDataLoader<JokeByIdDataLoader>()
                 ;
         }

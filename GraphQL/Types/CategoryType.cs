@@ -5,7 +5,7 @@ using HotChocolate.Types;
 
 namespace GraphQL.Types
 {
-    public class CategoryType: ObjectType<Category>
+    public class CategoryType : ObjectType<Category>
     {
         protected override void Configure(IObjectTypeDescriptor<Category> descriptor)
         {
@@ -14,7 +14,6 @@ namespace GraphQL.Types
                 .IdField(t => t.Id)
                 .ResolveNode((ctx, id) =>
                     ctx.DataLoader<CategoryByIdDataLoader>().LoadAsync(id, ctx.RequestAborted));
-
-    }
+        }
     }
 }
