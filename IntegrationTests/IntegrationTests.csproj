@@ -38,4 +38,8 @@
       <ProjectReference Include="..\GraphQL\GraphQL.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Tests\__snapshots__" />
+    </ItemGroup>
+
 </Project>

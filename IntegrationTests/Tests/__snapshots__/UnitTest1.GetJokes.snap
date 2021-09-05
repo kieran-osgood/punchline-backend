@@ -1,0 +1,20 @@
+﻿{
+  "data": {
+    "jokes": {
+      "nodes": [
+        {
+          "id": "Sm9rZQppMQ==",
+          "body": "TEST RECORD: You\u0027re standing on my scarf."
+        },
+        {
+          "id": "Sm9rZQppMg==",
+          "body": "TEST RECORD: Would you like a jelly baby?"
+        },
+        {
+          "id": "Sm9rZQppMw==",
+          "body": "TEST RECORD: To the rational mind, nothing is inexplicable; only unexplained."
+        }
+      ]
+    }
+  }
+}
