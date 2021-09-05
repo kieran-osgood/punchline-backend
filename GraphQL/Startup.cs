@@ -65,13 +65,13 @@ namespace GraphQL
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
-                .SetPagingOptions(new PagingOptions{ InferConnectionNameFromField = false })
+                .SetPagingOptions(new PagingOptions {InferConnectionNameFromField = false})
                 .AddHttpRequestInterceptor((context, executor, builder, token) =>
                 {
                     builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
 
-                    var userId = context.User.FindFirst(ClaimTypes.Sid)?.Value;
-                    builder.AddProperty(GlobalStates.HttpContext.UserUid, userId);
+                    var userUid = context.User.FindFirst(ClaimTypes.Sid)?.Value;
+                    builder.AddProperty(GlobalStates.HttpContext.UserUid, userUid);
 
                     return default;
                 })
@@ -79,19 +79,15 @@ namespace GraphQL
                 .AddType<JokeQueries>()
                 .AddType<CategoryQueries>()
                 .AddType<UserJokeHistoryQueries>()
-
                 .AddMutationType(d => d.Name(Mutation))
                 .AddType<UserJokeHistoryMutations>()
                 .AddType<UserMutations>()
-
                 .AddType<JokeType>()
                 .AddType<CategoryType>()
                 .AddType<UserJokeHistoryType>()
-
                 .AddDataLoader<JokeByIdDataLoader>()
                 .AddDataLoader<CategoryByIdDataLoader>()
                 .AddDataLoader<UserJokeHistoryByIdDataLoader>()
-
                 .AddSorting()
                 .AddFiltering()
                 .AddAuthorization()
