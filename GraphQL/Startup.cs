@@ -27,16 +27,14 @@ namespace GraphQL
     public class Startup
     {
         private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _environment;
 
         private static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
 
-        public Startup(IWebHostEnvironment environment, IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -48,7 +46,7 @@ namespace GraphQL
                     .UseLoggerFactory(MyLoggerFactory)
                     .EnableDetailedErrors()
                     .UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
-
+            // ! Controllers?
             services.AddControllers();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
 
@@ -57,10 +55,13 @@ namespace GraphQL
                 .AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(
                     FirebaseAuthenticationOptions.SchemeName, null);
 
-            FirebaseApp.Create(new AppOptions
+            if (FirebaseApp.DefaultInstance is null)
             {
-                Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
-            });
+                FirebaseApp.Create(new AppOptions
+                {
+                    Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
+                });
+            }
 
             services.AddHttpContextAccessor();
             services
@@ -119,8 +120,8 @@ namespace GraphQL
                 endpoints.MapGraphQL("/graphql")
                     .WithOptions(new GraphQLServerOptions()
                     {
-                        EnableSchemaRequests = _environment.IsDevelopment(),
-                        Tool = {Enable = _environment.IsDevelopment()}
+                        EnableSchemaRequests = env.IsDevelopment(),
+                        Tool = {Enable = env.IsDevelopment()}
                     });
             });
         }

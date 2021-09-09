@@ -15,7 +15,7 @@ namespace IntegrationTests.Tests
         public async Task Schema_Changed()
         {
             // Arrange
-            var client = _factory.CreateClient();
+            var client = _factory.CreateDefaultClient();
 
             // Act
             var response = await client.GetAsync("/graphql?sdl");

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using GraphQL;
 using HotChocolate;
 using HotChocolate.Execution;
+using IntegrationTests.Helpers;
 using Snapshooter.Xunit;
 using Xunit;
 
@@ -15,9 +16,8 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task GetJokes()
         {
-            var executor = await _factory.Services.GetRequestExecutorAsync();
-            var query =
-                @"query Jokes {
+            var factory = _factory.WithAuthentication(TestClaimsProvider.WithAdminClaims());
+            const string query = @"query Jokes {
                   jokes(jokeLength: SMALL) {
                     nodes {
                       id
@@ -25,9 +25,41 @@ namespace IntegrationTests.Tests
                     }
                   }
                 }";
-            var request = QueryRequestBuilder.New().SetQuery(query).Create();
-            var results = await executor.ExecuteAsync(request);
-            (await results.ToJsonAsync()).MatchSnapshot();
+
+            var executor = await factory.Services.GetRequestExecutorAsync();
+            var request = QueryRequestBuilder
+                .New()
+                .AddAuthorisedUser()
+                .SetQuery(query)
+                .Create();
+            var result = await executor.ExecuteAsync(request);
+
+            Assert.Null(result.Errors);
+            (await result.ToJsonAsync()).MatchSnapshot();
+        }
+
+
+        [Theory]
+        [InlineData(@"query Jokes {
+                  jokes {
+                    nodes {
+                      id
+                      body
+                    }
+                  }
+                }")]
+        public async Task Unauthenticated_User_Request(string query)
+        {
+            var request =
+                QueryRequestBuilder
+                    .New()
+                    .SetQuery(query)
+                    .Create();
+
+            var executor = await _factory.Services.GetRequestExecutorAsync();
+            var result = await executor.ExecuteAsync(request);
+
+            (await result.ToJsonAsync()).MatchSnapshot();
         }
     }
 }

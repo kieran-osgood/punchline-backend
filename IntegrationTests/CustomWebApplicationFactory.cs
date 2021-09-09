@@ -1,14 +1,7 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using GraphQL.Data;
-using GraphQL.DataLoader;
-using GraphQL.Entities.Category;
-using GraphQL.Entities.Joke;
-using GraphQL.Entities.User;
-using GraphQL.Entities.UserJokeHistory;
-using GraphQL.Static;
-using GraphQL.Types;
-using HotChocolate.Types.Pagination;
 using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -19,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace IntegrationTests
 {
     public class CustomWebApplicationFactory<TStartup>
-        : WebApplicationFactory<TStartup> where TStartup: class
+        : WebApplicationFactory<TStartup> where TStartup : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -30,14 +23,12 @@ namespace IntegrationTests
                          typeof(DbContextOptions<ApplicationDbContext>));
 
                 services.Remove(descriptor);
-
                 services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
                 });
 
                 var sp = services.BuildServiceProvider();
-
                 using (var scope = sp.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;
