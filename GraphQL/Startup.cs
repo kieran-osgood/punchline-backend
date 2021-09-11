@@ -54,10 +54,11 @@ namespace GraphQL
                 .AddAuthentication(FirebaseAuthenticationOptions.SchemeName)
                 .AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(
                     FirebaseAuthenticationOptions.SchemeName, null);
-
+            
+            var contentRoot = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile("../firebase-admin-sdk.json"),
+                Credential = GoogleCredential.FromFile(contentRoot + "/../firebase-admin-sdk.json"),
             }, _firebaseName);
             
             services.AddHttpContextAccessor();
