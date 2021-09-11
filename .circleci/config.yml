@@ -13,10 +13,10 @@ jobs:
                at: .
           - checkout
           - sops/aws_decrypt:
-               # aws_access_key_id: AWS_ACCESS_KEY_ID
-               # aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-               input_file_path: "firebase-admin-sdk.encrypted.json"
-               output_file_path: "firebase-admin-sdk.json"
+               aws_access_key_id: AWS_ACCESS_KEY_ID
+               aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+               input_file_path: "~/project/firebase-admin-sdk.encrypted.json"
+               output_file_path: "~/project/firebase-admin-sdk.json"
                output_type: "json"
                sops_release_url: https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
           - persist_to_workspace:
