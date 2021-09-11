@@ -2,9 +2,37 @@ version: 2.1
 
 orbs:
      win: circleci/windows@2.2.0
-     sops: theskimm/sops@0.0.2
      aws-cli: circleci/aws-cli@2.0
 
+commands:
+  aws_decrypt:
+    parameters:
+      aws_access_key_id:
+        type: env_var_name
+        default: AWS_ACCESS_KEY_ID
+      aws_secret_access_key:
+        type: env_var_name
+        default: AWS_SECRET_ACCESS_KEY
+      input_file_path:
+        type: string
+      output_file_path:
+        type: string
+      sops_release_url:
+        type: string
+        default: https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
+    steps:
+      - run:
+          name: download SOPS
+          command: >
+            curl -Lo sops
+            << parameters.sops_release_url >>
+            \
+              && chmod +x sops
+            sudo cp sops /usr/local/bin && rm sops
+      - run:
+          name: decrypt resource
+          command: |
+            AWS_PROFILE=$AWS_CREDENTIAL_PROFILE sops -d << parameters.input_file_path >> > << parameters.output_file_path >>
 jobs:
      decrypt-secrets:
           docker:
@@ -15,12 +43,11 @@ jobs:
           - checkout
           - aws-cli/setup:
                profile-name: "$AWS_CREDENTIAL_PROFILE"
-          - sops/aws_decrypt:
+          - aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
                input_file_path: "~/project/firebase-admin-sdk.encrypted.json"
                output_file_path: "~/project/firebase-admin-sdk.json"
-               sops_release_url: https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.linux
           - persist_to_workspace:
                paths: .
                root: .
