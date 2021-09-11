@@ -11,7 +11,7 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Schema_Changed()
         {
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithAdminClaims());; 
+            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());; 
 
             // Arrange
             var client = factory.CreateDefaultClient();

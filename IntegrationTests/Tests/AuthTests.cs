@@ -18,7 +18,7 @@ namespace IntegrationTests.Tests
         public async Task Unauthenticated_Request_On_Authorized_Endpoint_Denies_Access(string query)
         {
             // Setups a factory which has an AuthenticationScheme and Handler setup
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithAdminClaims()); 
+            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims()); 
             var request =
                 QueryRequestBuilder
                     .New()

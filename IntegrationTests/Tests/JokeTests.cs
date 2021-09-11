@@ -18,7 +18,7 @@ namespace IntegrationTests.Tests
         [InlineData(JokeLength.Large)]
         public async Task Jokes_Length_Filters_Results(JokeLength length)
         {
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithAdminClaims());; 
+            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());; 
             var query = 
                 $@"query Jokes {{
                   jokes(jokeLength: {length.ToString().ToUpper()}) {{

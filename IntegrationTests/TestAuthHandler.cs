@@ -4,6 +4,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Authentication;
+using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,12 +21,12 @@ namespace IntegrationTests
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            var user = Utilities.GetValidAuthUser();
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Sid, "n3mU54T2ZJTrS7DySfDtPf6dB9M2"),
-                new(ClaimTypes.Name, "Test User"),
+                new(ClaimTypes.Sid, user.FirebaseUid),
+                new(ClaimTypes.Name, user.Name),
                 new(ClaimTypes.Expiration, "99999999"),
-                new(ClaimTypes.Email, "test@gmail.com"),
                 new(ClaimTypes.GroupSid, UserGroups.User),
                 new(CustomClaimTypes.PhotoUrl, "")
             };
