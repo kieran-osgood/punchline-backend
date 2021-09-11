@@ -9,6 +9,7 @@
      steps:
        - checkout
        - run: dotnet build
+       - run: dotnet test
       #  - run:
           # command: remove-item alias:curl; curl https://punch-line.co.uk/hooks/redeploy-punchline-backend
           # when: on_success
