@@ -55,6 +55,8 @@ jobs:
      build:
           executor: win/default
           steps:
+               - attach_workspace:
+                    at: .
                - run: dotnet build
                - run: dotnet test
                - store_artifacts:
