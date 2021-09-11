@@ -3,6 +3,9 @@
   &lt;Assembly Path="/Users/kieranosgood/.nuget/packages/hotchocolate.data/11.1.0-rc.3/lib/net5.0/HotChocolate.Data.dll" /&gt;
   &lt;Assembly Path="/usr/local/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/5.0.0/ref/net5.0/Microsoft.Extensions.Configuration.KeyPerFile.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8f24039a_002Dec67_002D406c_002Db11f_002D4acb0a19b532/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from &amp;lt;IntegrationTests&amp;gt;" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;Project Location="/Users/kieranosgood/git/punchline-backend/IntegrationTests" Presentation="&amp;lt;IntegrationTests&amp;gt;" /&gt;
+&lt;/SessionState&gt;</s:String>
 	
 	
 	

@@ -18,17 +18,6 @@ namespace GraphQL.Entities.UserJokeHistory
         [UsePaging]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<Data.UserJokeHistory> GetUserJokeHistories(
-            [ScopedService] ApplicationDbContext context)
-        {
-            return from ujh in context.UserJokeHistory select ujh;
-        }
-
-        // [Authorize]
-        [UseApplicationDbContext]
-        [UsePaging]
-        [UseFiltering]
-        [UseSorting]
         public IQueryable<Data.UserJokeHistory> GetUserJokeHistoryByUserId(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using GraphQL.Data;
 
 namespace IntegrationTests.Helpers
@@ -70,20 +71,12 @@ namespace IntegrationTests.Helpers
         }
 
         /**
-         * Returns aa User, useful within tests when you you want an id that *should* return a user
+         * Returns a User, useful within tests when you you want an id that *should* return a user
          * from the HttpInterceptors
          */
         public static User GetValidAuthUser()
         {
-            return new()
-            {
-                Id = 1,
-                FirebaseUid = "n3mU54T2ZJTrS7DySfDtPf6dB9M2",
-                Name = "Test User",
-                JokeCount = 0,
-                CreatedOn = new DateTime(),
-                LastLogin = new DateTime()
-            };
+            return GetSeedingUsers().FirstOrDefault();
         }
         #endregion
     }

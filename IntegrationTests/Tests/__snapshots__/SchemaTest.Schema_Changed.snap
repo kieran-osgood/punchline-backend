@@ -79,7 +79,7 @@ type Mutation {
   deleteUserJokeHistory(id: ID!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
   updateUserJokeHistory(input: UpdateBookmarkInput!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
   login(input: UserLoginInput!): UserPayload!
-  completeOnboarding(input: UserLoginInput!): UserPayload!
+  completeOnboarding(input: UserLoginInput!): UserPayload! @authorize(apply: BEFORE_RESOLVER)
 }
 
 "Information about pagination in a connection."
@@ -96,10 +96,9 @@ type PageInfo {
 
 type Query {
   jokes(deepLinkedJokeId: ID jokeLength: JokeLength! = MEDIUM blockedCategoryIds: [ID!] "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: JokeFilterInput order: [JokeSortInput!]): JokesConnection @authorize(apply: BEFORE_RESOLVER)
-  categories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput order: [CategorySortInput!]): CategoriesConnection
+  categories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput order: [CategorySortInput!]): CategoriesConnection @authorize(apply: BEFORE_RESOLVER)
   userCategories(uid: String! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput order: [CategorySortInput!]): UserCategoriesConnection @authorize(apply: BEFORE_RESOLVER)
-  userJokeHistories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserJokeHistoryFilterInput order: [UserJokeHistorySortInput!]): UserJokeHistoriesConnection @authorize(apply: BEFORE_RESOLVER)
-  userJokeHistoryByUserId("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserJokeHistoryFilterInput order: [UserJokeHistorySortInput!]): UserJokeHistoryByUserIdConnection
+  userJokeHistoryByUserId("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserJokeHistoryFilterInput order: [UserJokeHistorySortInput!]): UserJokeHistoryByUserIdConnection @authorize(apply: BEFORE_RESOLVER)
 }
 
 type User {
@@ -137,25 +136,6 @@ type UserCategoriesEdge {
 type UserError {
   code: ErrorCodes!
   message: String!
-}
-
-"A connection to a list of items."
-type UserJokeHistoriesConnection {
-  "Information to aid in pagination."
-  pageInfo: PageInfo!
-  "A list of edges."
-  edges: [UserJokeHistoriesEdge!]
-  "A flattened list of the nodes."
-  nodes: [UserJokeHistory!]
-  totalCount: Int!
-}
-
-"An edge in a connection."
-type UserJokeHistoriesEdge {
-  "A cursor for use in pagination."
-  cursor: String!
-  "The item at the end of the edge."
-  node: UserJokeHistory!
 }
 
 type UserJokeHistory implements Node {
