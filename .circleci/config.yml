@@ -1,27 +1,38 @@
- version: 2.1
+version: 2.1
 
- orbs:
-  win: circleci/windows@2.2.0
-  sops: theskimm/sops@0.0.2
+orbs:
+     win: circleci/windows@2.2.0
+     sops: theskimm/sops@0.0.2
 
- jobs:
-   decrypt-secrets:
-      executor: linux
-      steps:
-       - checkout
-       - sops/aws_decrypt:
-            aws_access_key_id: $AWS_ACCESS_KEY_ID
-            aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
-            input_file_path: "./firebase-admin-sdk.encrypted.json"
-            output_file_path: "./firebase-admin-sdk.json"
-            output_type: "json"
-            sops_release_url: https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.exe
-       - store_artifacts:
-            path: /bin
-   build:
-     executor: win/default
-     steps:
-       - run: dotnet build
-       - run: dotnet test
-       - store_artifacts:
-            path: /bin
+jobs:
+     decrypt-secrets:
+          docker:
+               - image: buildpack-deps:trusty
+          steps:
+          - attach_workspace:
+               at: .
+          - checkout
+          - sops/aws_decrypt:
+               aws_access_key_id: AWS_ACCESS_KEY_ID
+               aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+               input_file_path: "./firebase-admin-sdk.encrypted.json"
+               output_file_path: "./firebase-admin-sdk.json"
+               output_type: "json"
+               sops_release_url: https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.exe
+          - persist_to_workspace:
+               paths: .
+               root: .
+
+     build:
+          executor: win/default
+          steps:
+               - run: dotnet build
+               - run: dotnet test
+               - store_artifacts:
+                    path: /bin
+# WorkFlows
+workflows:
+     # Only runs on the develop branch 
+     develop:
+          jobs: 
+               - decrypt-secrets
