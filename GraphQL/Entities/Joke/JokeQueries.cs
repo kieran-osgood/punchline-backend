@@ -43,23 +43,23 @@ namespace GraphQL.Entities.Joke
                 where j.Body.Length <= length
                 where !context.UserJokeHistory.Where(x => x.UserId == user.Id).Any(x => x.JokeId == j.Id)
                 select j);
-            
+
             if (blockedCategoryIds != null)
             {
                 jokes = (from j in jokes
-                    from c in j.Categories.Where(x => blockedCategoryIds != null && (blockedCategoryIds.Count <= 0 || !blockedCategoryIds.Contains(x.Id)))
+                    from c in j.Categories.Where(x =>
+                        blockedCategoryIds != null &&
+                        (blockedCategoryIds.Count <= 0 || !blockedCategoryIds.Contains(x.Id)))
                     select j);
             }
 
-            if (deepLinkedJokeId.HasValue)
-            {
-                var deepLinkedJokeQueryable = from j in context.Jokes
-                    where j.Id == deepLinkedJokeId
-                    select j;
-                return deepLinkedJokeQueryable.Concat(jokes).Distinct().OrderBy(x => x.Id != deepLinkedJokeId);
-            }
+            if (!deepLinkedJokeId.HasValue) return jokes;
 
-            return jokes;
+            var deepLinkedJokeQueryable = from j in context.Jokes
+                where j.Id == deepLinkedJokeId
+                select j;
+            
+            return deepLinkedJokeQueryable.Concat(jokes).Distinct().OrderBy(x => x.Id != deepLinkedJokeId);
         }
     }
 }
