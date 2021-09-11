@@ -27,3 +27,7 @@ db-ungenerate:
 build:
 # Use this for validating that theres no warnings/errors before running migrations
 	dotnet build
+decrypt-firebase:
+	AWS_PROFILE=iamadmin-punchline sops -d firebase-admin-sdk.encrypted.json > firebase-admin-sdk.json
+encrypt-firebase:
+	AWS_PROFILE=iamadmin-punchline sops -e firebase-admin-sdk.json > firebase-admin-sdk.encrypted.json
