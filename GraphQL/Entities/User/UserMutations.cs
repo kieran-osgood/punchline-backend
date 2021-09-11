@@ -7,6 +7,7 @@ using GraphQL.Data;
 using GraphQL.Extensions;
 using GraphQL.Static;
 using HotChocolate;
+using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -63,6 +64,7 @@ namespace GraphQL.Entities.User
             }
         }
 
+        [Authorize]
         [UseApplicationDbContext]
         public async Task<UserPayload> CompleteOnboarding(
             [ScopedService] ApplicationDbContext context,

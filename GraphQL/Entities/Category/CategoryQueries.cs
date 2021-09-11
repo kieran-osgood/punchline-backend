@@ -12,6 +12,7 @@ namespace GraphQL.Entities.Category
     [ExtendObjectType(ObjectTypes.Query)]
     public class CategoryQueries
     {
+        [Authorize]
         [UseApplicationDbContext]
         [UsePaging]
         [UseFiltering]
