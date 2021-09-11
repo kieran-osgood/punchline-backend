@@ -42,7 +42,7 @@ jobs:
                at: .
           - checkout
           - aws-cli/setup:
-               profile-name: "$AWS_CREDENTIAL_PROFILE"
+               profile-name: iamadmin-punchline
           - aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
