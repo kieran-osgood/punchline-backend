@@ -3,6 +3,7 @@ version: 2.1
 orbs:
      win: circleci/windows@2.2.0
      sops: theskimm/sops@0.0.2
+     aws-cli: circleci/aws-cli@2.0
 
 jobs:
      decrypt-secrets:
@@ -12,6 +13,8 @@ jobs:
           - attach_workspace:
                at: .
           - checkout
+          - aws-cli/setup:
+               profile-name: "$AWS_CREDENTIAL_PROFILE"
           - sops/aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
