@@ -9,9 +9,7 @@
      executor: win/default
      steps:
        - checkout
-       - run: ./scripts/ci-aws-config.sh
-       - run: dotnet build
-       - run: dotnet test
+      #  - run: ./scripts/ci-aws-config.sh
        - sops/aws_decrypt:
           aws_access_key_id: AWS_ACCESS_KEY_ID
           aws_secret_access_key: AWS_SECRET_ACCESS_KEY
@@ -19,6 +17,9 @@
           output_file_path: "./firebase-admin-sdk.json"
           output_type: "json"
           sops_release_url: https://github.com/mozilla/sops/releases/download/v3.7.1/sops-v3.7.1.exe
+       - run: dotnet build
+       - run: dotnet test
+
       #  - run:
           # command: remove-item alias:curl; curl https://punch-line.co.uk/hooks/redeploy-punchline-backend
           # when: on_success
