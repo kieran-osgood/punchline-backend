@@ -30,14 +30,12 @@ namespace GraphQL
 
         private static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
-
+        private readonly string _firebaseName = Guid.NewGuid().ToString();
 
         public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-
-        private readonly string _firebaseName = Guid.NewGuid().ToString();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -59,9 +57,9 @@ namespace GraphQL
 
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"]),
+                Credential = GoogleCredential.FromFile("../firebase-admin-sdk.json"),
             }, _firebaseName);
-
+            
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
