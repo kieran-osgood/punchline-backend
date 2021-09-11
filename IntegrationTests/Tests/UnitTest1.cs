@@ -10,13 +10,10 @@ namespace IntegrationTests.Tests
 {
     public class UnitTest1 : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
-        public UnitTest1(CustomWebApplicationFactory<Startup> factory) => _factory = factory;
-
         [Fact]
         public async Task GetJokes()
         {
-            var factory = _factory.WithAuthentication(TestClaimsProvider.WithAdminClaims());
+            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithAdminClaims());; 
             const string query = @"query Jokes {
                   jokes(jokeLength: SMALL) {
                     nodes {
@@ -50,13 +47,14 @@ namespace IntegrationTests.Tests
                 }")]
         public async Task Unauthenticated_User_Request(string query)
         {
+            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithAdminClaims());; 
             var request =
                 QueryRequestBuilder
                     .New()
                     .SetQuery(query)
                     .Create();
 
-            var executor = await _factory.Services.GetRequestExecutorAsync();
+            var executor = await factory.Services.GetRequestExecutorAsync();
             var result = await executor.ExecuteAsync(request);
 
             (await result.ToJsonAsync()).MatchSnapshot();

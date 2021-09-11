@@ -21,6 +21,7 @@ namespace IntegrationTests.Helpers
             db.Jokes.RemoveRange(db.Jokes);
             db.Categories.RemoveRange(db.Categories);
             db.Users.RemoveRange(db.Users);
+            db.SaveChanges();
             InitializeDbForTests(db);
         }
 

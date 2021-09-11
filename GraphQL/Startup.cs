@@ -37,6 +37,8 @@ namespace GraphQL
             _configuration = configuration;
         }
 
+        private readonly string _firebaseName = Guid.NewGuid().ToString();
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -55,13 +57,10 @@ namespace GraphQL
                 .AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(
                     FirebaseAuthenticationOptions.SchemeName, null);
 
-            if (FirebaseApp.DefaultInstance is null)
+            FirebaseApp.Create(new AppOptions
             {
-                FirebaseApp.Create(new AppOptions
-                {
-                    Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"])
-                });
-            }
+                Credential = GoogleCredential.FromFile(_configuration["GOOGLE_APPLICATION_CREDENTIALS"]),
+            }, _firebaseName);
 
             services.AddHttpContextAccessor();
             services

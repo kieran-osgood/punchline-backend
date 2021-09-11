@@ -8,14 +8,13 @@ namespace IntegrationTests.Tests
 {
     public class SchemaTest : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
-        public SchemaTest(CustomWebApplicationFactory<Startup> factory) => _factory = factory;
-
         [Fact]
         public async Task Schema_Changed()
         {
+            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithAdminClaims());; 
+
             // Arrange
-            var client = _factory.CreateDefaultClient();
+            var client = factory.CreateDefaultClient();
 
             // Act
             var response = await client.GetAsync("/graphql?sdl");
