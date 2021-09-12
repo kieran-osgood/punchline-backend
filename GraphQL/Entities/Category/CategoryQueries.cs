@@ -27,11 +27,12 @@ namespace GraphQL.Entities.Category
         [UseFiltering]
         [UseSorting]
         public IQueryable<Data.Category> GetUserCategories(
-            string uid,
+            [GlobalState(GlobalStates.HttpContext.UserUid)]
+            string? userUid,
             [ScopedService] ApplicationDbContext context)
         {
             return from c in context.Categories
-                where c.Users.Any(x => x.FirebaseUid == uid)
+                where c.Users.Any(x => x.FirebaseUid == userUid)
                 select c;
         }
     }

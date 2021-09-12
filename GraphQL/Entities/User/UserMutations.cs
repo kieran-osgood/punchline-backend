@@ -25,7 +25,6 @@ namespace GraphQL.Entities.User
             _logger = logger.CreateLogger<UserMutations>();
         }
 
-
         [UseApplicationDbContext]
         public async Task<UserPayload> Login(
             [ScopedService] ApplicationDbContext context,
@@ -68,17 +67,18 @@ namespace GraphQL.Entities.User
         [UseApplicationDbContext]
         public async Task<UserPayload> CompleteOnboarding(
             [ScopedService] ApplicationDbContext context,
-            UserLoginInput input,
+            [GlobalState(GlobalStates.HttpContext.UserUid)]
+            string userUid,
             CancellationToken cancellationToken
         )
         {
             try
             {
-                var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == input.FirebaseUid,
+                var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == userUid,
                     cancellationToken);
         
                 if (user is null) 
-                    throw new Exception($"Unable to locate user: {input.FirebaseUid}");
+                    throw new Exception($"Unable to locate user: {userUid}");
         
                 user.OnboardingComplete = true;
                 

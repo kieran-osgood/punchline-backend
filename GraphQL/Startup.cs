@@ -31,10 +31,13 @@ namespace GraphQL
         private static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
         private readonly string _firebaseName = Guid.NewGuid().ToString();
+        private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             _configuration = configuration;
+            _environment = environment;
+
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -59,7 +62,7 @@ namespace GraphQL
             FirebaseApp.Create(new AppOptions
             {
                 Credential = GoogleCredential.FromFile(contentRoot + "/../firebase-admin-sdk.json"),
-            }, _firebaseName);
+            }, _environment.IsEnvironment("Testing") ?  _firebaseName : "[DEFAULT]");
             
             services.AddHttpContextAccessor();
             services

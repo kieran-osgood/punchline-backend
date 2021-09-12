@@ -21,12 +21,12 @@ namespace IntegrationTests
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Testing");
             builder.ConfigureServices(services =>
             {
                 var oldDbInstance = services.SingleOrDefault(
                     d => d.ServiceType ==
                          typeof(DbContextOptions<ApplicationDbContext>));
-
                 services.Remove(oldDbInstance);
                 services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase(_dbName)
