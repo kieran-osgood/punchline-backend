@@ -33,9 +33,6 @@ namespace GraphQL.Data
          * Unmapped Resolver Fields
          */
 
-        [NotMapped]
-        public JokeLength Length { get; set; } = JokeLength.Small;
-
     }
 
     public enum JokeLength

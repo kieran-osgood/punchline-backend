@@ -26,12 +26,6 @@ namespace GraphQL.Types
                 .ResolveWith<JokeResolvers>(t => t.GetCategoriesAsync(default!, default!, default!, default!))
                 .UseDbContext<ApplicationDbContext>()
                 .Name("categories");
-
-            descriptor
-                .Field(t => t.Length)
-                .ResolveWith<JokeResolvers>(t => t.GetJokeBodyLength(default!))
-                .UseDbContext<ApplicationDbContext>()
-                .Name("length");
         }
 
         private class JokeResolvers
@@ -49,13 +43,6 @@ namespace GraphQL.Types
                     .FirstOrDefaultAsync(cancellationToken);
 
                 return await dataLoader.LoadAsync(ids, cancellationToken);
-            }
-
-            public JokeLength GetJokeBodyLength(Joke joke)
-            {
-                if (joke.Body.Length > (int) JokeLength.Large) return JokeLength.Large;
-                if (joke.Body.Length > (int) JokeLength.Medium) return JokeLength.Medium;
-                return JokeLength.Small;
             }
         }
     }

@@ -32,7 +32,6 @@ namespace IntegrationTests.Helpers
             {
                 new()
                 {
-                    Length = JokeLength.Medium,
                     Categories = GetSeedingCategories().ToList(),
                     Body = "TEST RECORD: You're standing on my scarf."
                 },
