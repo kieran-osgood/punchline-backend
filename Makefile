@@ -28,6 +28,11 @@ build:
 # Use this for validating that theres no warnings/errors before running migrations
 	dotnet build
 decrypt-firebase:
-	AWS_PROFILE=iamadmin-punchline sops -d firebase-admin-sdk.encrypted.json > firebase-admin-sdk.json
+	AWS_PROFILE=iamadmin-punchline sops -d GraphQL/firebase-admin-sdk.encrypted.json > GraphQL/firebase-admin-sdk.json
 encrypt-firebase:
-	AWS_PROFILE=iamadmin-punchline sops -e firebase-admin-sdk.json > firebase-admin-sdk.encrypted.json
+	AWS_PROFILE=iamadmin-punchline sops -e GraphQL/firebase-admin-sdk.json > GraphQL/firebase-admin-sdk.encrypted.json
+
+build:
+	docker build -t graphql . \
+run-build:
+	docker run -it --rm -p 5000:80 --name punchline-backend graphql

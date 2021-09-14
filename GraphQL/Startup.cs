@@ -61,7 +61,7 @@ namespace GraphQL
             var contentRoot = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile(contentRoot + "/../firebase-admin-sdk.json"),
+                Credential = GoogleCredential.FromFile(contentRoot + "/firebase-admin-sdk.json"),
             }, _environment.IsEnvironment("Testing") ?  _firebaseName : "[DEFAULT]");
             
             services.AddHttpContextAccessor();

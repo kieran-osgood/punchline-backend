@@ -46,8 +46,8 @@ jobs:
           - aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-               input_file_path: "~/project/firebase-admin-sdk.encrypted.json"
-               output_file_path: "~/project/firebase-admin-sdk.json"
+               input_file_path: "~/project/GraphQL/firebase-admin-sdk.encrypted.json"
+               output_file_path: "~/project/GraphQL/firebase-admin-sdk.json"
           - persist_to_workspace:
                paths: .
                root: .

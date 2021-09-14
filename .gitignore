@@ -48,4 +48,8 @@ Thumbs.db
 *.mov
 *.wmv
 
-firebase-admin-sdk.json
+# Secrets - encrypted with SOPS
+/GraphQL/firebase-admin-sdk.json
+
+# Results of the Docker build
+/published
