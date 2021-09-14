@@ -113,6 +113,7 @@ workflows:
                - aws-ecr/build-and-push-image:
                     repo: "${AWS_RESOURCE_NAME_PREFIX}"
                     tag: "${CIRCLE_SHA1}"
+                    profile-name: iamadmin-punchline
                     requires:
                       - build-test-push
                # - testz:
