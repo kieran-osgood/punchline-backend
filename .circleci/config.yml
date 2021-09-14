@@ -54,7 +54,9 @@ jobs:
                paths: .
                root: .
      build-test-push:
-          executor: win/default
+          executor: 
+               name: win/default
+               shell: bash.exe
           steps:
                - attach_workspace:
                     at: .
