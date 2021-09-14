@@ -55,7 +55,7 @@ jobs:
                root: .
      build-test-push:
           docker:
-               - image: mcr.microsoft.com/dotnet/aspnet:5.0
+               - image: mcr.microsoft.com/dotnet/sdk:5.0
           steps:
                - attach_workspace:
                     at: .
