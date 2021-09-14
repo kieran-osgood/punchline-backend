@@ -54,9 +54,8 @@ jobs:
                paths: .
                root: .
      build-test-push:
-          executor: 
-               name: win/default
-               shell: bash.exe
+          docker:
+               - image: mcr.microsoft.com/dotnet/aspnet:5.0
           steps:
                - attach_workspace:
                     at: .
@@ -66,9 +65,8 @@ jobs:
                # - run: docker tag punchline-backend-container:latest 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend:latest
                # - run: docker push 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend-container:latest
                # - run: docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com
-               - run: 
-                    command: (Get-ECRLoginCommand).Password | docker login --username AWS --password-stdin 345637428723.dkr.ecr.us-east-1.amazonaws.com
-                    shell: powershell.exe
+               # - run: 
+                    # command: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 345637428723.dkr.ecr.us-east-1.amazonaws.com
                - run:
                     name: Build the container
                     command: dotnet build -c Release
