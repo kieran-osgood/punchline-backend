@@ -91,7 +91,16 @@ jobs:
                - persist_to_workspace:
                     paths: .
                     root: .
-
+     testz:
+          docker:
+                - image: default
+          steps:
+          - aws-ecr/build-image:
+               repo: "${AWS_RESOURCE_NAME_PREFIX}"
+               tag: "${CIRCLE_SHA1}"
+          - aws-ecr/push-image:
+               repo: "${AWS_RESOURCE_NAME_PREFIX}"
+               tag: "${CIRCLE_SHA1}"
 # WorkFlows
 workflows:
      # Only runs on the develop branch 
@@ -101,19 +110,13 @@ workflows:
                - build-test-push:
                     requires:
                          - decrypt-secrets
-               - aws-ecr/build-image:
-                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
-                    tag: "${CIRCLE_SHA1}"
+               - testz:
                     requires:
-                      - build-test-push
-               - aws-ecr/push-image:
-                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
-                    tag: "${CIRCLE_SHA1}"
-                    requires:
-                      - build-test-push
+                         - build-test-push
+
                - aws-ecs/deploy-service-update:
                     requires:
-                    - build-test-push # only run this job once aws-ecr/build-and-push-image has completed
+                         - build-test-push # only run this job once aws-ecr/build-and-push-image has completed
                     family: "${AWS_RESOURCE_NAME_PREFIX}-service"
                     cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
                     container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
