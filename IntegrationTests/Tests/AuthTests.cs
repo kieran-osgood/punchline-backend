@@ -17,7 +17,6 @@ namespace IntegrationTests.Tests
         [InlineData(@"query UserJokeHistoryBookmarks {userJokeHistoryByUserId {nodes {id}}}")]
         public async Task Unauthenticated_Request_On_Authorized_Endpoint_Denies_Access(string query)
         {
-            Assert.Equal("a", "b");
             // Setups a factory which has an AuthenticationScheme and Handler setup
             var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims()); 
             var request =
