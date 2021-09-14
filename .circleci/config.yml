@@ -54,7 +54,7 @@ jobs:
           - persist_to_workspace:
                paths: .
                root: .
-     build-test-push:
+     build-test:
           docker:
                - image: buildpack-deps:trusty
           steps:
@@ -73,41 +73,21 @@ jobs:
                     command: |
                          sudo apt-get update && \
                          sudo apt-get install -y dotnet-sdk-5.0
-               # - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
-               # - run: docker build -t punchline-backend-image .
-               # - run: docker run -it --rm -p 5000:80 --name punchline-backend-container punchline-backend-image
-               # - run: docker tag punchline-backend-container:latest 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend:latest
-               # - run: docker push 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend-container:latest
-               - aws-cli/setup:
-                    profile-name: iamadmin-punchline
-                    # version: 2.1.29
-               # - run: docker login -u AWS --password $(AWS_PROFILE=iamadmin-punchline aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com
                - run:
-                    name: Build the container
-                    command: dotnet build -c Release
-               - run:
-                    name: Test the container
-                    command: dotnet test -c Release
+                    name: Build Build and Test App
+                    command: |
+                     dotnet build -c Release
+                     dotnet test -c Release
                - persist_to_workspace:
                     paths: .
                     root: .
-     testz:
-          docker:
-                - image: default
-          steps:
-          - aws-ecr/build-image:
-               repo: "${AWS_RESOURCE_NAME_PREFIX}"
-               tag: "${CIRCLE_SHA1}"
-          - aws-ecr/push-image:
-               repo: "${AWS_RESOURCE_NAME_PREFIX}"
-               tag: "${CIRCLE_SHA1}"
 # WorkFlows
 workflows:
      # Only runs on the develop branch 
      build_and_test:
           jobs: 
                - decrypt-secrets
-               - build-test-push:
+               - build-test:
                     requires:
                          - decrypt-secrets
                - aws-ecr/build-and-push-image:
@@ -115,18 +95,21 @@ workflows:
                     tag: "${CIRCLE_SHA1}"
                     profile-name: iamadmin-punchline
                     requires:
-                      - build-test-push
-               # - testz:
-               #      requires:
-               #           - build-test-push
-
+                      - build-test
+                    filters:
+                         branches:
+                              only:
+                                   - master
                - aws-ecs/deploy-service-update:
                     requires:
                          - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
                     family: "${AWS_RESOURCE_NAME_PREFIX}-service"
                     cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
                     container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
-
+                    filters:
+                              branches:
+                                   only:
+                                        - master
 
 
 
