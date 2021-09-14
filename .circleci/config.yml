@@ -45,6 +45,7 @@ jobs:
           - checkout
           - aws-cli/setup:
                profile-name: iamadmin-punchline
+               version: 2.1.29
           - aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
@@ -65,7 +66,9 @@ jobs:
                # - run: docker run -it --rm -p 5000:80 --name punchline-backend-container punchline-backend-image
                # - run: docker tag punchline-backend-container:latest 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend:latest
                # - run: docker push 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend-container:latest
-               - aws-cli/setup
+               - aws-cli/setup:
+                    profile-name: iamadmin-punchline
+                    version: 2.1.29
                - run: docker login -u AWS --password $(aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com
                - run:
                     name: Build the container
