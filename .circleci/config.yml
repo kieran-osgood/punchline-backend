@@ -65,6 +65,7 @@ jobs:
                # - run: docker run -it --rm -p 5000:80 --name punchline-backend-container punchline-backend-image
                # - run: docker tag punchline-backend-container:latest 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend:latest
                # - run: docker push 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend-container:latest
+               - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 345637428723.dkr.ecr.us-east-1.amazonaws.com
                - run:
                     name: Build the container
                     command: dotnet build -c Release
