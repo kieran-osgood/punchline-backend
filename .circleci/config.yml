@@ -69,7 +69,7 @@ jobs:
                - aws-cli/setup:
                     profile-name: iamadmin-punchline
                     version: 2.1.29
-               - run: docker login -u AWS --password $(aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com
+               - run: docker login -u AWS --password $(AWS_PROFILE=iamadmin-punchline aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com
                - run:
                     name: Build the container
                     command: dotnet build -c Release
