@@ -56,7 +56,7 @@ jobs:
                root: .
      build-test-push:
           docker:
-               - image: buildpack-deps:trust
+               - image: buildpack-deps:trusty
           steps:
                - attach_workspace:
                     at: .
