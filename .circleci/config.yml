@@ -3,6 +3,8 @@ version: 2.1
 orbs:
      win: circleci/windows@2.2.0
      aws-cli: circleci/aws-cli@2.0
+     aws-ecr: circleci/aws-ecr@7.2.0
+     aws-ecs: circleci/aws-ecs@02.2.1
 
 commands:
   aws_decrypt:
@@ -51,22 +53,57 @@ jobs:
           - persist_to_workspace:
                paths: .
                root: .
-
-     build:
+     build-test-push:
           executor: win/default
           steps:
                - attach_workspace:
                     at: .
-               - run: dotnet build
-               - run: dotnet test
-               - store_artifacts:
-                    path: /bin
+               # - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
+               # - run: docker build -t punchline-backend-image .
+               # - run: docker run -it --rm -p 5000:80 --name punchline-backend-container punchline-backend-image
+               # - run: docker tag punchline-backend-container:latest 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend:latest
+               # - run: docker push 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend-container:latest
+               - run:
+                    name: Build the container
+                    command: dotnet build -c Release
+               - run:
+                    name: Test the container
+                    command: dotnet test -c Release
+               - aws-ecr/build-image:
+                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
+                    tag: "${CIRCLE_SHA1}"
+               - aws-ecr/push-image:
+                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
+                    tag: "${CIRCLE_SHA1}"
+     
 # WorkFlows
 workflows:
      # Only runs on the develop branch 
      build_and_test:
           jobs: 
                - decrypt-secrets
-               - build:
+               - build-test-push:
                     requires:
                          - decrypt-secrets
+               - aws-ecs/deploy-service-update:
+                    requires:
+                    - build-test-push # only run this job once aws-ecr/build-and-push-image has completed
+                    family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+                    cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
+                    container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
