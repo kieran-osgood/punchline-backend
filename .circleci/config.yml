@@ -55,12 +55,24 @@ jobs:
                paths: .
                root: .
      build-test-push:
-          executor: 
-               name: win/default
-               shell: bash.exe
+          docker:
+               - image: buildpack-deps:trust
           steps:
                - attach_workspace:
                     at: .
+               - run: 
+                    name: install dotnet-sdk
+                    command: |
+                         wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb 
+                         sudo dpkg -i packages-microsoft-prod.deb
+                         rm packages-microsoft-prod.deb
+               - run:
+                    name: install dotnet-sdk
+                    command: |
+                         sudo apt-get update; \
+                         sudo apt-get install -y apt-transport-https && \
+                         sudo apt-get update && \
+                         sudo apt-get install -y dotnet-sdk-5.0
                # - run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin aws_account_id.dkr.ecr.region.amazonaws.com
                # - run: docker build -t punchline-backend-image .
                # - run: docker run -it --rm -p 5000:80 --name punchline-backend-container punchline-backend-image
@@ -68,7 +80,7 @@ jobs:
                # - run: docker push 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend-container:latest
                - aws-cli/setup:
                     profile-name: iamadmin-punchline
-                    version: 2.1.29
+                    # version: 2.1.29
                - run: docker login -u AWS --password $(AWS_PROFILE=iamadmin-punchline aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com
                - run:
                     name: Build the container
