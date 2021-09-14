@@ -61,7 +61,7 @@ jobs:
                - attach_workspace:
                     at: .
                - run: 
-                    name: install dotnet-sdk
+                    name: install dotnet-microsoft signing keys
                     command: |
                          sudo apt-get update; \
                          sudo apt-get install -y apt-transport-https && \
@@ -88,13 +88,10 @@ jobs:
                - run:
                     name: Test the container
                     command: dotnet test -c Release
-               - aws-ecr/build-image:
-                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
-                    tag: "${CIRCLE_SHA1}"
-               - aws-ecr/push-image:
-                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
-                    tag: "${CIRCLE_SHA1}"
-     
+               - persist_to_workspace:
+                    paths: .
+                    root: .
+
 # WorkFlows
 workflows:
      # Only runs on the develop branch 
@@ -104,6 +101,16 @@ workflows:
                - build-test-push:
                     requires:
                          - decrypt-secrets
+               - aws-ecr/build-image:
+                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
+                    tag: "${CIRCLE_SHA1}"
+                    requires:
+                      - build-test-push
+               - aws-ecr/push-image:
+                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
+                    tag: "${CIRCLE_SHA1}"
+                    requires:
+                      - build-test-push
                - aws-ecs/deploy-service-update:
                     requires:
                     - build-test-push # only run this job once aws-ecr/build-and-push-image has completed
