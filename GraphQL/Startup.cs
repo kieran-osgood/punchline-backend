@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Security.Claims;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -59,9 +60,10 @@ namespace GraphQL
                     FirebaseAuthenticationOptions.SchemeName, null);
             
             var contentRoot = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+            var firebaseCredential = Path.Combine(contentRoot, "firebase-admin-sdk.json");
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile(contentRoot + "/firebase-admin-sdk.json"),
+                Credential = GoogleCredential.FromFile(firebaseCredential),
             }, _environment.IsEnvironment("Testing") ?  _firebaseName : "[DEFAULT]");
             
             services.AddHttpContextAccessor();
