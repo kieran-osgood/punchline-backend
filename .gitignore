@@ -50,6 +50,6 @@ Thumbs.db
 
 # Secrets - encrypted with SOPS
 /GraphQL/firebase-admin-sdk.json
-
+**/appsettings.Production.json
 # Results of the Docker build
 /published

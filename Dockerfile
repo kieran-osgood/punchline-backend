@@ -13,8 +13,10 @@ COPY GraphQL/. ./GraphQL/
 WORKDIR /source/GraphQL
 RUN dotnet publish -c release -o /app --no-restore --no-cache
 
+EXPOSE 5000
+
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=build /app ./
-ENTRYPOINT ["dotnet", "GraphQL.dll"]
+ENTRYPOINT ["dotnet", "GraphQL.dll", "--verbosity detailed"]

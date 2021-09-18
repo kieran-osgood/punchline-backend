@@ -49,12 +49,17 @@ jobs:
           - aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-               input_file_path: "~/project/GraphQL/firebase-admin-sdk.encrypted.json"
+               input_file_path: "~/project/GraphQL/encrypted.firebase-admin-sdk.json"
                output_file_path: "~/project/GraphQL/firebase-admin-sdk.json"
+          - aws_decrypt:
+               aws_access_key_id: AWS_ACCESS_KEY_ID
+               aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+               input_file_path: "~/project/GraphQL/encrypted.appsettings.Production.json"
+               output_file_path: "~/project/GraphQL/appsettings.Production.json"
           - persist_to_workspace:
                paths: .
                root: .
-     build-test:
+     dotnet-build-and-test:
           docker:
                - image: buildpack-deps:trusty
           steps:
@@ -87,7 +92,7 @@ workflows:
      build_and_test:
           jobs: 
                - decrypt-secrets
-               - build-test:
+               - dotnet-build-and-test:
                     requires:
                          - decrypt-secrets
                - aws-ecr/build-and-push-image:
@@ -95,7 +100,7 @@ workflows:
                     tag: "${CIRCLE_SHA1}"
                     profile-name: iamadmin-punchline
                     requires:
-                      - build-test
+                      - dotnet-build-and-test
                     filters:
                          branches:
                               only:
@@ -103,9 +108,9 @@ workflows:
                - aws-ecs/deploy-service-update:
                     requires:
                          - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-                    family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-                    cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-                    container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,tag=${CIRCLE_SHA1}"
+                    family: "${AWS_RESOURCE_NAME_PREFIX}"
+                    cluster-name: "${AWS_RESOURCE_NAME_PREFIX}"
+                    container-image-name-updates: "container=container-of-${AWS_RESOURCE_NAME_PREFIX},tag=${CIRCLE_SHA1}"
                     filters:
                               branches:
                                    only:
