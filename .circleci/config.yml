@@ -38,7 +38,7 @@ commands:
   transfer_secrets:
      steps:
           - run: mkdir ~/project/decrypted-files
-          - run: cp -a ~/project/decrypted-files/. ~/project/GraphQL/
+          - run: cp -a ~/project/decrypted-files ~/project/GraphQL/
 jobs:
      decrypt-secrets:
           docker:
@@ -50,6 +50,7 @@ jobs:
           - aws-cli/setup:
                profile-name: iamadmin-punchline
                version: 2.1.29
+          - run: mkdir ~/project/decrypted-files
           - aws_decrypt:
                aws_access_key_id: AWS_ACCESS_KEY_ID
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
