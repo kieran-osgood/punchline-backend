@@ -46,7 +46,6 @@ jobs:
           - attach_workspace:
                at: .
           - checkout
-          - transfer_secrets
           - aws-cli/setup:
                profile-name: iamadmin-punchline
                version: 2.1.29
@@ -60,6 +59,7 @@ jobs:
                aws_secret_access_key: AWS_SECRET_ACCESS_KEY
                input_file_path: "~/project/GraphQL/encrypted.appsettings.Production.json"
                output_file_path: "~/project/decrypted-files/appsettings.Production.json"
+          - transfer_secrets
           - persist_to_workspace:
                paths: .
                root: .
