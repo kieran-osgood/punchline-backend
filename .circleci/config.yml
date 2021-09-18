@@ -116,7 +116,7 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          family: "container-of-${AWS_RESOURCE_NAME_PREFIX}"
           cluster-name: "${AWS_RESOURCE_NAME_PREFIX}"
           container-image-name-updates: "container=container-of-${AWS_RESOURCE_NAME_PREFIX},tag=${CIRCLE_SHA1}"
           filters:
