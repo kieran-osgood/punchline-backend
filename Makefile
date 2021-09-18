@@ -2,7 +2,7 @@ project =  --project GraphQL
 PROJECT_DIR = GraphQL
 # Launch the Database
 up:
-	cd ${PROJECT_DIR} && docker-compose --env-file .env up --no-recreate
+	cd ${PROJECT_DIR} && docker-compose --env-file .env up --no-recreate --remove-orphans
 # Run the C# project
 run:
 	cd ${PROJECT_DIR} && dotnet watch run  --project GraphQL

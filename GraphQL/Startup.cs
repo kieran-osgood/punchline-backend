@@ -31,6 +31,7 @@ namespace GraphQL
 
         private static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
         private readonly string _firebaseName = Guid.NewGuid().ToString();
         private readonly IWebHostEnvironment _environment;
 
@@ -38,7 +39,6 @@ namespace GraphQL
         {
             _configuration = configuration;
             _environment = environment;
-
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -49,7 +49,8 @@ namespace GraphQL
                 x
                     .UseLoggerFactory(MyLoggerFactory)
                     .EnableDetailedErrors()
-                    .UseNpgsql(_configuration.GetConnectionString("DefaultConnection")));
+                    .UseMySQL(_configuration.GetConnectionString("DefaultConnection")));
+
             // ! Controllers?
             services.AddControllers();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -58,14 +59,14 @@ namespace GraphQL
                 .AddAuthentication(FirebaseAuthenticationOptions.SchemeName)
                 .AddScheme<FirebaseAuthenticationOptions, FirebaseAuthenticationHandler>(
                     FirebaseAuthenticationOptions.SchemeName, null);
-            
+
             var contentRoot = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
             var firebaseCredential = Path.Combine(contentRoot, "firebase-admin-sdk.json");
             FirebaseApp.Create(new AppOptions
             {
                 Credential = GoogleCredential.FromFile(firebaseCredential),
-            }, _environment.IsEnvironment("Testing") ?  _firebaseName : "[DEFAULT]");
-            
+            }, _environment.IsEnvironment("Testing") ? _firebaseName : "[DEFAULT]");
+
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
