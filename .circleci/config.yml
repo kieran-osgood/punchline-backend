@@ -1,10 +1,10 @@
 version: 2.1
 
 orbs:
-     win: circleci/windows@2.2.0
-     aws-cli: circleci/aws-cli@2.0.3
-     aws-ecr: circleci/aws-ecr@7.2.0
-     aws-ecs: circleci/aws-ecs@02.2.1
+  win: circleci/windows@2.2.0
+  aws-cli: circleci/aws-cli@2.0.3
+  aws-ecr: circleci/aws-ecr@7.2.0
+  aws-ecs: circleci/aws-ecs@02.2.1
 
 commands:
   aws_decrypt:
@@ -36,93 +36,93 @@ commands:
           command: |
             AWS_PROFILE=$AWS_CREDENTIAL_PROFILE sops -d << parameters.input_file_path >> > << parameters.output_file_path >>
   transfer_secrets:
-     steps:
-          - run: cp -a ~/project/decrypted-files/. ~/project/GraphQL
+    steps:
+      - run: cp -a ~/project/decrypted-files/. ~/project/GraphQL
 jobs:
-     decrypt-secrets:
-          docker:
-               - image: buildpack-deps:trusty
-          steps:
-          - attach_workspace:
-               at: .
-          - checkout
-          - aws-cli/setup:
-               profile-name: iamadmin-punchline
-               version: 2.1.29
-          - run: mkdir ~/project/decrypted-files
-          - aws_decrypt:
-               aws_access_key_id: AWS_ACCESS_KEY_ID
-               aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-               input_file_path: "~/project/GraphQL/encrypted.firebase-admin-sdk.json"
-               output_file_path: "~/project/decrypted-files/firebase-admin-sdk.json"
-          - aws_decrypt:
-               aws_access_key_id: AWS_ACCESS_KEY_ID
-               aws_secret_access_key: AWS_SECRET_ACCESS_KEY
-               input_file_path: "~/project/GraphQL/encrypted.appsettings.Production.json"
-               output_file_path: "~/project/decrypted-files/appsettings.Production.json"
-          - transfer_secrets
-          - persist_to_workspace:
-               paths: .
-               root: .
-     dotnet-build-and-test:
-          docker:
-               - image: buildpack-deps:trusty
-          steps:
-               - attach_workspace:
-                    at: .
-               - run: 
-                    name: install dotnet-microsoft signing keys
-                    command: |
-                         sudo apt-get update; \
-                         sudo apt-get install -y apt-transport-https && \
-                         wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb 
-                         sudo dpkg -i packages-microsoft-prod.deb
-                         rm packages-microsoft-prod.deb
-               - run:
-                    name: install dotnet-sdk
-                    command: |
-                         sudo apt-get update && \
-                         sudo apt-get install -y dotnet-sdk-5.0
-               - run:
-                    name: Build Build and Test App
-                    command: |
-                     dotnet build -c Release
-                     dotnet test -c Release
-               - persist_to_workspace:
-                    paths: .
-                    root: .
+  decrypt-secrets:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - attach_workspace:
+          at: .
+      - checkout
+      - aws-cli/setup:
+          profile-name: iamadmin-punchline
+          version: 2.1.29
+      - run: mkdir ~/project/decrypted-files
+      - aws_decrypt:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          input_file_path: "~/project/GraphQL/encrypted.firebase-admin-sdk.json"
+          output_file_path: "~/project/decrypted-files/firebase-admin-sdk.json"
+      - aws_decrypt:
+          aws_access_key_id: AWS_ACCESS_KEY_ID
+          aws_secret_access_key: AWS_SECRET_ACCESS_KEY
+          input_file_path: "~/project/GraphQL/encrypted.appsettings.Production.json"
+          output_file_path: "~/project/decrypted-files/appsettings.Production.json"
+      - transfer_secrets
+      - persist_to_workspace:
+          paths: .
+          root: .
+  dotnet-build-and-test:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: install dotnet-microsoft signing keys
+          command: |
+            sudo apt-get update; \
+            sudo apt-get install -y apt-transport-https && \
+            wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb 
+            sudo dpkg -i packages-microsoft-prod.deb
+            rm packages-microsoft-prod.deb
+      - run:
+          name: install dotnet-sdk
+          command: |
+            sudo apt-get update && \
+            sudo apt-get install -y dotnet-sdk-5.0
+      - run:
+          name: Build Build and Test App
+          command: |
+            dotnet build -c Release
+            dotnet test -c Release
+      - persist_to_workspace:
+          paths: .
+          root: .
 # WorkFlows
 workflows:
-     # Only runs on the develop branch 
-     build_and_test:
-          jobs: 
-               - decrypt-secrets
-               - dotnet-build-and-test:
-                    requires:
-                         - decrypt-secrets
-               - aws-ecr/build-and-push-image:
-                    checkout: false
-                    attach-workspace: true
-                    workspace-root: .
-                    repo: "${AWS_RESOURCE_NAME_PREFIX}"
-                    tag: "${CIRCLE_SHA1}"
-                    profile-name: iamadmin-punchline
-                    requires:
-                      - dotnet-build-and-test
-                     filters:
-                          branches:
-                               only:
-                                    - master
-                - aws-ecs/deploy-service-update:
-                     requires:
-                          - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-                     family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-                     cluster-name: "${AWS_RESOURCE_NAME_PREFIX}"
-                     container-image-name-updates: "container=container-of-${AWS_RESOURCE_NAME_PREFIX},tag=${CIRCLE_SHA1}"
-                     filters:
-                               branches:
-                                    only:
-                                         - master
+  # Only runs on the develop branch 
+  build_and_test:
+    jobs:
+      - decrypt-secrets
+      - dotnet-build-and-test:
+          requires:
+            - decrypt-secrets
+      - aws-ecr/build-and-push-image:
+          checkout: false
+          attach-workspace: true
+          workspace-root: .
+          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+          tag: "${CIRCLE_SHA1}"
+          profile-name: iamadmin-punchline
+          requires:
+            - dotnet-build-and-test
+          filters:
+            branches:
+              only:
+                - master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
+          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}"
+          container-image-name-updates: "container=container-of-${AWS_RESOURCE_NAME_PREFIX},tag=${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only:
+                - master
 
 
 
