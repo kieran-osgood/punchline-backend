@@ -37,6 +37,7 @@ commands:
             AWS_PROFILE=$AWS_CREDENTIAL_PROFILE sops -d << parameters.input_file_path >> > << parameters.output_file_path >>
   transfer_secrets:
      steps:
+          - run: mkdir ~/project/decrypted-files
           - run: cp -a ~/project/decrypted-files/. ~/project/GraphQL/
 jobs:
      decrypt-secrets:
