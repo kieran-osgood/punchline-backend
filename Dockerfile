@@ -13,7 +13,8 @@ COPY GraphQL/. ./GraphQL/
 WORKDIR /source/GraphQL
 RUN dotnet publish -c release -o /app --no-restore --no-cache
 
-EXPOSE 5000
+# This is the port that the app listens on - and what ECS will direct traffic towards 
+EXPOSE 80
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
