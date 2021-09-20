@@ -21,7 +21,8 @@ namespace GraphQL.Entities.Joke
         public record JokeQueryInput(
             [property: ID(nameof(Joke))] int? DeepLinkedJokeId,
             [property: ID(nameof(Data.Category))] List<int>? BlockedCategoryIds = default!,
-            JokeLength JokeLength = JokeLength.Medium);
+            JokeLength JokeLength = JokeLength.Medium,
+            bool ProfanityFilter = true);
 
         [Authorize]
         [UseApplicationDbContext]
@@ -57,13 +58,18 @@ namespace GraphQL.Entities.Joke
                     select j);
             }
 
-            if (!input.DeepLinkedJokeId.HasValue) return jokes;
+            if (input.DeepLinkedJokeId.HasValue)
+            {
+                var deepLinkedJokeQueryable = from j in context.Jokes
+                    where j.Id == input.DeepLinkedJokeId
+                    select j;
+                jokes = deepLinkedJokeQueryable.Concat(jokes).Distinct().OrderBy(x => x.Id != input.DeepLinkedJokeId);
+            }
 
-            var deepLinkedJokeQueryable = from j in context.Jokes
-                where j.Id == input.DeepLinkedJokeId
-                select j;
-
-            jokes = deepLinkedJokeQueryable.Concat(jokes).Distinct().OrderBy(x => x.Id != input.DeepLinkedJokeId);
+            if (input.ProfanityFilter)
+            {
+                jokes = from j in jokes where j.ExplicitContent == false select j;
+            }
 
             return jokes;
         }

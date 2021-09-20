@@ -86,6 +86,7 @@ namespace GraphQL
                 .AddType<UserJokeHistoryQueries>()
                 .AddMutationType(d => d.Name(Mutation))
                 .AddType<UserJokeHistoryMutations>()
+                .AddType<JokeMutations>()
                 .AddType<UserMutations>()
                 .AddType<JokeType>()
                 .AddType<CategoryType>()
@@ -102,7 +103,6 @@ namespace GraphQL
                     MaxPageSize = 500,
                     IncludeTotalCount = true
                 })
-                .AddDataLoader<JokeByIdDataLoader>()
                 ;
         }
 
