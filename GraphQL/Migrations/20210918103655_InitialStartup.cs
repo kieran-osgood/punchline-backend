@@ -30,10 +30,10 @@ namespace GraphQL.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Body = table.Column<string>(type: "text", nullable: false),
-                    PositiveRating = table.Column<int>(type: "int", nullable: false),
-                    NegativeRating = table.Column<int>(type: "int", nullable: false),
-                    SkipRating = table.Column<int>(type: "int", nullable: false),
-                    ReportCount = table.Column<int>(type: "int", nullable: false)
+                    PositiveRating = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    NegativeRating = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    SkipRating = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    ReportCount = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {
