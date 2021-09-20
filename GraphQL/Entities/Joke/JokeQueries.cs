@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using GraphQL.Data;
@@ -17,6 +18,11 @@ namespace GraphQL.Entities.Joke
     [ExtendObjectType(ObjectTypes.Query)]
     public class JokeQueries
     {
+        public record JokeQueryInput(
+            [property: ID(nameof(Joke))] int? DeepLinkedJokeId,
+            [property: ID(nameof(Data.Category))] List<int>? BlockedCategoryIds = default!,
+            JokeLength JokeLength = JokeLength.Medium);
+
         [Authorize]
         [UseApplicationDbContext]
         [UsePaging]
@@ -26,17 +32,15 @@ namespace GraphQL.Entities.Joke
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string? userUid,
-            [ID(nameof(Data.Joke))] int? deepLinkedJokeId,
-            JokeLength jokeLength = JokeLength.Medium,
-            [ID(nameof(Data.Category))] List<int>? blockedCategoryIds = default!)
+            JokeQueryInput input)
         {
             // Casting to variable because of upstream bug: https://github.com/npgsql/efcore.pg/issues/1281
-            var length = (int) jokeLength;
+            var length = (int) input.JokeLength;
 
             var user = await (from u in context.Users where u.FirebaseUid == userUid select u).FirstOrDefaultAsync();
             if (user is null)
             {
-                throw new Exception("Oops");
+                throw new Exception("User is null");
             }
 
             var jokes = (from j in context.Jokes
@@ -44,22 +48,24 @@ namespace GraphQL.Entities.Joke
                 where !context.UserJokeHistory.Where(x => x.UserId == user.Id).Any(x => x.JokeId == j.Id)
                 select j);
 
-            if (blockedCategoryIds != null)
+            if (input.BlockedCategoryIds != null)
             {
                 jokes = (from j in jokes
                     from c in j.Categories.Where(x =>
-                        blockedCategoryIds != null &&
-                        (blockedCategoryIds.Count <= 0 || !blockedCategoryIds.Contains(x.Id)))
+                        input.BlockedCategoryIds != null &&
+                        (input.BlockedCategoryIds.Count <= 0 || !input.BlockedCategoryIds.Contains(x.Id)))
                     select j);
             }
 
-            if (!deepLinkedJokeId.HasValue) return jokes;
+            if (!input.DeepLinkedJokeId.HasValue) return jokes;
 
             var deepLinkedJokeQueryable = from j in context.Jokes
-                where j.Id == deepLinkedJokeId
+                where j.Id == input.DeepLinkedJokeId
                 select j;
-            
-            return deepLinkedJokeQueryable.Concat(jokes).Distinct().OrderBy(x => x.Id != deepLinkedJokeId);
+
+            jokes = deepLinkedJokeQueryable.Concat(jokes).Distinct().OrderBy(x => x.Id != input.DeepLinkedJokeId);
+
+            return jokes;
         }
     }
 }
