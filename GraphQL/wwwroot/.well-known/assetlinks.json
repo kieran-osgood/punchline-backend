@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.ko.punchline",
+    "sha256_cert_fingerprints":
+    ["CE:82:E0:AD:6B:DB:29:FB:8E:18:A4:E7:16:99:08:F0:7A:B8:6C:99:3E:43:42:D6:F8:50:F6:EF:D6:78:8F:C5"]
+  }
+}]

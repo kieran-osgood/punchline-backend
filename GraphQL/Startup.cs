@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Security.Claims;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -113,7 +114,8 @@ namespace GraphQL
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

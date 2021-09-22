@@ -1,0 +1,5 @@
+User-agent: Googlebot
+Allow: /.well-known/assetlinks.json
+
+User-agent: Googlebot
+Allow: /.well-known/apple-app-site-association
