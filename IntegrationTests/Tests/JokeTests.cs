@@ -21,7 +21,7 @@ namespace IntegrationTests.Tests
             var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());; 
             var query = 
                 $@"query Jokes {{
-                  jokes(jokeLength: {length.ToString().ToUpper()}) {{
+                  jokes(input: {{jokeLength: {length.ToString().ToUpper()}}}) {{
                     nodes {{
                       id
                       body

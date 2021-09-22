@@ -45,6 +45,7 @@ type Joke implements Node {
   negativeRating: Int!
   skipRating: Int!
   reportCount: Int!
+  explicitContent: Boolean!
   userJokeHistories: [UserJokeHistory!]!
   users: [User!]!
 }
@@ -68,6 +69,11 @@ type JokesEdge {
   node: Joke!
 }
 
+type MutateJokePayload {
+  joke: Joke
+  errors: [UserError!]
+}
+
 type MutateUserJokeHistoryPayload {
   userJokeHistory: UserJokeHistory
   errors: [UserError!]
@@ -77,6 +83,7 @@ type Mutation {
   rateJoke(input: RateJokeInput!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
   deleteUserJokeHistory(id: ID!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
   updateUserJokeHistory(input: UpdateBookmarkInput!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
+  reportJoke(id: ID!): MutateJokePayload! @authorize(apply: BEFORE_RESOLVER)
   login(input: UserLoginInput!): UserPayload!
   completeOnboarding: UserPayload! @authorize(apply: BEFORE_RESOLVER)
 }
@@ -94,7 +101,7 @@ type PageInfo {
 }
 
 type Query {
-  jokes(deepLinkedJokeId: ID jokeLength: JokeLength! = MEDIUM blockedCategoryIds: [ID!] "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: JokeFilterInput order: [JokeSortInput!]): JokesConnection @authorize(apply: BEFORE_RESOLVER)
+  jokes(input: JokeQueryInput! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: JokeFilterInput order: [JokeSortInput!]): JokesConnection @authorize(apply: BEFORE_RESOLVER)
   categories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput order: [CategorySortInput!]): CategoriesConnection @authorize(apply: BEFORE_RESOLVER)
   userCategories("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: CategoryFilterInput order: [CategorySortInput!]): UserCategoriesConnection @authorize(apply: BEFORE_RESOLVER)
   userJokeHistoryByUserId("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: UserJokeHistoryFilterInput order: [UserJokeHistorySortInput!]): UserJokeHistoryByUserIdConnection @authorize(apply: BEFORE_RESOLVER)
@@ -233,9 +240,17 @@ input JokeFilterInput {
   negativeRating: ComparableInt32OperationFilterInput
   skipRating: ComparableInt32OperationFilterInput
   reportCount: ComparableInt32OperationFilterInput
+  explicitContent: BooleanOperationFilterInput
   userJokeHistories: ListFilterInputTypeOfUserJokeHistoryFilterInput
   categories: ListFilterInputTypeOfCategoryFilterInput
   users: ListFilterInputTypeOfUserFilterInput
+}
+
+input JokeQueryInput {
+  deepLinkedJokeId: ID
+  blockedCategoryIds: [ID!]
+  jokeLength: JokeLength! = MEDIUM
+  profanityFilter: Boolean! = true
 }
 
 input JokeSortInput {
@@ -246,6 +261,7 @@ input JokeSortInput {
   negativeRating: SortEnumType
   skipRating: SortEnumType
   reportCount: SortEnumType
+  explicitContent: SortEnumType
 }
 
 input ListFilterInputTypeOfCategoryFilterInput {

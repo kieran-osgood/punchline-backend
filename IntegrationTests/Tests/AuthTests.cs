@@ -11,7 +11,7 @@ namespace IntegrationTests.Tests
     public class AuthTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         [Theory]
-        [InlineData(@"query Jokes {jokes {nodes {id}}}")]
+        [InlineData(@"query Jokes {jokes(input: {}) {nodes {id}}}")]
         [InlineData(@"query Category {categories {nodes {id}}}")]
         [InlineData(@"query GetUserCategories {categories {nodes {id}}}")]
         [InlineData(@"query UserJokeHistoryBookmarks {userJokeHistoryByUserId {nodes {id}}}")]
