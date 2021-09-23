@@ -1,11 +1,13 @@
 {
-    "applinks": {
-        "apps": [],
-        "details": [
-            {
-                "appID": "com.ko.punchline",
-                "paths": [ "/share/joke" ]
-            },
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "com.ko.punchline",
+        "paths": [
+          "/share/joke"
         ]
-    }
+      }
+    ]
+  }
 }
