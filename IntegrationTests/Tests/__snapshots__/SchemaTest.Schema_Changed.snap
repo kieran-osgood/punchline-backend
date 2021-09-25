@@ -48,6 +48,15 @@ type Joke implements Node {
   explicitContent: Boolean!
   userJokeHistories: [UserJokeHistory!]!
   users: [User!]!
+  jokeReports: [JokeReport!]!
+}
+
+type JokeReport implements Node {
+  id: ID!
+  reportingUser: User
+  reportedJoke: Joke
+  description: String!
+  createdAt: DateTime!
 }
 
 "A connection to a list of items."
@@ -69,8 +78,8 @@ type JokesEdge {
   node: Joke!
 }
 
-type MutateJokePayload {
-  joke: Joke
+type MutateJokeReportPayload {
+  jokeReport: JokeReport
   errors: [UserError!]
 }
 
@@ -83,7 +92,7 @@ type Mutation {
   rateJoke(input: RateJokeInput!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
   deleteUserJokeHistory(id: ID!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
   updateUserJokeHistory(input: UpdateBookmarkInput!): MutateUserJokeHistoryPayload! @authorize(apply: BEFORE_RESOLVER)
-  reportJoke(id: ID!): MutateJokePayload! @authorize(apply: BEFORE_RESOLVER)
+  addJokeReport(input: JokeReportInput!): MutateJokeReportPayload! @authorize(apply: BEFORE_RESOLVER)
   login(input: UserLoginInput!): UserPayload!
   completeOnboarding: UserPayload! @authorize(apply: BEFORE_RESOLVER)
 }
@@ -118,6 +127,7 @@ type User implements Node {
   onboardingComplete: Boolean!
   userJokeHistories: [UserJokeHistory!]!
   jokes: [Joke!]!
+  jokeReports: [JokeReport!]!
 }
 
 "A connection to a list of items."
@@ -244,6 +254,7 @@ input JokeFilterInput {
   userJokeHistories: ListFilterInputTypeOfUserJokeHistoryFilterInput
   categories: ListFilterInputTypeOfCategoryFilterInput
   users: ListFilterInputTypeOfUserFilterInput
+  jokeReports: ListFilterInputTypeOfJokeReportFilterInput
 }
 
 input JokeQueryInput {
@@ -251,6 +262,21 @@ input JokeQueryInput {
   blockedCategoryIds: [ID!]
   jokeLength: JokeLength! = MEDIUM
   profanityFilter: Boolean! = true
+}
+
+input JokeReportFilterInput {
+  and: [JokeReportFilterInput!]
+  or: [JokeReportFilterInput!]
+  id: ComparableInt32OperationFilterInput
+  description: StringOperationFilterInput
+  createdAt: ComparableDateTimeOperationFilterInput
+  reportedJoke: JokeFilterInput
+  reportingUser: UserFilterInput
+}
+
+input JokeReportInput {
+  id: ID!
+  description: String!
 }
 
 input JokeSortInput {
@@ -275,6 +301,13 @@ input ListFilterInputTypeOfJokeFilterInput {
   all: JokeFilterInput
   none: JokeFilterInput
   some: JokeFilterInput
+  any: Boolean
+}
+
+input ListFilterInputTypeOfJokeReportFilterInput {
+  all: JokeReportFilterInput
+  none: JokeReportFilterInput
+  some: JokeReportFilterInput
   any: Boolean
 }
 
@@ -339,6 +372,7 @@ input UserFilterInput {
   userJokeHistories: ListFilterInputTypeOfUserJokeHistoryFilterInput
   categories: ListFilterInputTypeOfCategoryFilterInput
   jokes: ListFilterInputTypeOfJokeFilterInput
+  jokeReports: ListFilterInputTypeOfJokeReportFilterInput
 }
 
 input UserJokeHistoryFilterInput {

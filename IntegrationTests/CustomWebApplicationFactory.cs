@@ -8,6 +8,7 @@ using IntegrationTests.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,6 +31,7 @@ namespace IntegrationTests
                 services.Remove(oldDbInstance);
                 services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
                     options.UseInMemoryDatabase(_dbName)
+                        .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning))
                 );
 
                 var sp = services.BuildServiceProvider();
@@ -41,7 +43,7 @@ namespace IntegrationTests
                         .GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
                     var context = db.CreateDbContext();
                     context.Database.EnsureCreated();
-                    
+
                     try
                     {
                         Utilities.InitializeDbForTests(context);
@@ -54,6 +56,5 @@ namespace IntegrationTests
                 }
             });
         }
-
     }
 }

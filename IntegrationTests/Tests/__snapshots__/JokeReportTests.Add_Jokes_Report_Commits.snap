@@ -1,0 +1,18 @@
+﻿{
+  "data": {
+    "addJokeReport": {
+      "jokeReport": {
+        "id": "Sm9rZVJlcG9ydAppMQ==",
+        "reportingUser": {
+          "id": "VXNlcgppMQ==",
+          "name": "Test User"
+        },
+        "reportedJoke": {
+          "id": "Sm9rZQppMQ==",
+          "title": "Cow With No Legs"
+        }
+      },
+      "errors": null
+    }
+  }
+}

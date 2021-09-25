@@ -18,29 +18,33 @@ namespace IntegrationTests.Tests
         [InlineData(JokeLength.Large)]
         public async Task Jokes_Length_Filters_Results(JokeLength length)
         {
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());; 
-            var query = 
-                $@"query Jokes {{
-                  jokes(input: {{jokeLength: {length.ToString().ToUpper()}}}) {{
-                    nodes {{
+            var factory =
+                new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());
+
+            var input = new JokeQueries.JokeQueryInput(null, null, length, false);
+            var query =
+                @"query Jokes($input: JokeQueryInput!) {
+                  jokes(input: $input) {
+                    nodes {
                       id
                       body
-                    }}
-                  }}
-                }}";
+                    }
+                  }
+                }";
 
             var executor = await factory.Services.GetRequestExecutorAsync();
             var request = QueryRequestBuilder
                 .New()
                 .AddAuthorizedUser()
                 .SetQuery(query)
+                .SetVariableValue("input", input)
                 .Create();
-            
+
             var result = await executor.ExecuteAsync(request);
 
             Assert.Null(result.Errors);
-            
-            (await result.ToJsonAsync()).MatchSnapshot();
+
+            Snapshot.Match(await result.ToJsonAsync(), $"{nameof(Jokes_Length_Filters_Results)}_{length}");
         }
     }
 }

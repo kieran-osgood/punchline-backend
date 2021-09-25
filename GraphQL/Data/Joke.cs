@@ -28,6 +28,7 @@ namespace GraphQL.Data
 
         public virtual ICollection<Category> Categories { get; set; } = default!;
         public virtual ICollection<User> Users { get; set; } = default!;
+        public virtual ICollection<JokeReport> JokeReports{ get; set; } = default!;
 
         /*
          * Unmapped Resolver Fields

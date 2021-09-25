@@ -9,6 +9,7 @@ using GraphQL.Data;
 using GraphQL.DataLoader;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
+using GraphQL.Entities.JokeReport;
 using GraphQL.Entities.User;
 using GraphQL.Entities.UserJokeHistory;
 using GraphQL.Repositories.Category;
@@ -16,6 +17,7 @@ using static GraphQL.Static.ObjectTypes;
 using GraphQL.Types;
 using HotChocolate.AspNetCore;
 using HotChocolate.Types.Pagination;
+using HotChocolate.Types.Relay;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -67,7 +69,9 @@ namespace GraphQL
             {
                 Credential = GoogleCredential.FromFile(firebaseCredential),
             }, _environment.IsEnvironment("Testing") ? _firebaseName : "[DEFAULT]");
-
+            
+            services.AddSingleton<IIdSerializer, IdSerializer>();
+            
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
@@ -88,12 +92,15 @@ namespace GraphQL
                 .AddMutationType(d => d.Name(Mutation))
                 .AddType<UserJokeHistoryMutations>()
                 .AddType<JokeMutations>()
+                .AddType<JokeReportMutations>()
                 .AddType<UserMutations>()
                 .AddType<JokeType>()
+                .AddType<JokeReportType>()
                 .AddType<UserType>()
                 .AddType<CategoryType>()
                 .AddType<UserJokeHistoryType>()
                 .AddDataLoader<JokeByIdDataLoader>()
+                .AddDataLoader<JokeReportByIdDataLoader>()
                 .AddDataLoader<CategoryByIdDataLoader>()
                 .AddDataLoader<UserJokeHistoryByIdDataLoader>()
                 .AddSorting()

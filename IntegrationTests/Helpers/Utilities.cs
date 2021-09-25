@@ -8,7 +8,6 @@ namespace IntegrationTests.Helpers
 {
     public static class Utilities
     {
-        #region snippet1
         public static void InitializeDbForTests(ApplicationDbContext db)
         {
             db.Jokes.AddRange(GetSeedingJokes());
@@ -32,12 +31,60 @@ namespace IntegrationTests.Helpers
             {
                 new()
                 {
-                    Categories = GetSeedingCategories().ToList(),
-                    Body = "TEST RECORD: You're standing on my scarf."
+                    Body = "What do you call a cow with no legs? Ground Beef!",
+                    Id = 1,
+                    Title = "Cow With No Legs"
                 },
-                new(){ Body = "TEST RECORD: Would you like a jelly baby?" },
-                new(){ Body = "TEST RECORD: To the rational mind, " +
-                              "nothing is inexplicable; only unexplained." }
+                new()
+                {
+                    Body = "What do you call a cow jumping over a barbed wire fence? Utter destruction.",
+                    Id = 2,
+                    Title = "Jumping Cow"
+                },
+                new()
+                {
+                    Body = "What's black and white and red all over? A newspaper.",
+                    Id = 4,
+                    Title = "Black, White and Red"
+                },
+                new()
+                {
+                    Body = "So, this guy walks into a bar. And says, \"ouch\".",
+                    Id = 5,
+                    Title = "Guy in a Bar"
+                },
+                new()
+                {
+                    Body = "If the opposite of pro is con, isn't the opposite of progress, congress?",
+                    Id = 6,
+                    Title = "Progress"
+                },
+                new()
+                {
+                    Body = "What do you call a guy with no arms or legs floating in the ocean? Bob!",
+                    Id = 7,
+                    Title = "Guy with no Limbs"
+                },
+                new()
+                {
+                    Body =
+                        "I went to a wedding the other day.  Two antennas were getting married.  It wasn't much of a wedding ceremony, but it was one heck of a reception!",
+                    Id = 8,
+                    Title = "Antenna"
+                },
+                new()
+                {
+                    Body = "There's this dyslexic guy... he walked into a bra...",
+                    Id = 9,
+                    Title = "Into the Bar"
+                },
+                new()
+                {
+                    Body =
+                        "Joel: \"How's the progress on new house that you are building Pete?\" Peter: \"Things are really slow at the moment.\" Joel: \"Yeah, I guess all this rain would be putting a dampener on things...\"",
+                    Id = 10,
+                    Title = "Rain"
+                }
             };
         }
 
@@ -45,13 +92,25 @@ namespace IntegrationTests.Helpers
         {
             return new List<Category>
             {
-                new(){ Name = "TEST RECORD: You're standing on my scarf." },
-                new(){ Name = "TEST RECORD: Would you like a jelly baby?" },
-                new(){ Name = "TEST RECORD: To the rational mind, " +
-                              "nothing is inexplicable; only unexplained." }
+                new()
+                {
+                    Id = 1,
+                    Name = "TEST RECORD: You're standing on my scarf."
+                },
+                new()
+                {
+                    Id = 2,
+                    Name = "TEST RECORD: Would you like a jelly baby?"
+                },
+                new()
+                {
+                    Id = 3,
+                    Name = "TEST RECORD: To the rational mind, " +
+                           "nothing is inexplicable; only unexplained."
+                }
             };
         }
-        
+
         private static IEnumerable<User> GetSeedingUsers()
         {
             return new List<User>
@@ -64,7 +123,6 @@ namespace IntegrationTests.Helpers
                     JokeCount = 0,
                     CreatedOn = new DateTime(),
                     LastLogin = new DateTime()
-                    
                 },
             };
         }
@@ -77,6 +135,10 @@ namespace IntegrationTests.Helpers
         {
             return GetSeedingUsers().FirstOrDefault();
         }
-        #endregion
+
+        public static Joke GetValidJoke()
+        {
+            return GetSeedingJokes().FirstOrDefault();
+        }
     }
 }

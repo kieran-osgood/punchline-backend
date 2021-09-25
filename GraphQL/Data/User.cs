@@ -29,6 +29,7 @@ namespace GraphQL.Data
         public List<UserJokeHistory> UserJokeHistories { get; set; } = new();
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
         public virtual ICollection<Joke> Jokes { get; set; } = new List<Joke>();
+        public virtual ICollection<JokeReport> JokeReports { get; set; } = new List<JokeReport>();
 
         /*
          * Unmapped Resolver Fields

@@ -13,6 +13,7 @@ namespace GraphQL.Data
         public DbSet<Joke> Jokes { get; set; } = default!;
         public DbSet<Category> Categories { get; set; } = default!;
         public DbSet<UserJokeHistory> UserJokeHistory { get; set; } = default!;
+        public DbSet<JokeReport> JokeReports { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -61,6 +62,17 @@ namespace GraphQL.Data
                         .WithMany(u => u.UserJokeHistories)
                         .HasForeignKey(ujh => ujh.UserId),
                     x => { x.HasIndex(ujh => new {ujh.JokeId, ujh.UserId}).IsUnique(); });
+            
+            modelBuilder
+                .Entity<JokeReport>(entity =>
+                {
+                    entity
+                        .HasOne(t => t.ReportingUser)
+                        .WithMany(t => t.JokeReports);
+                    entity
+                        .HasOne(t => t.ReportedJoke)
+                        .WithMany(t => t.JokeReports);
+                });
         }
     }
 }
