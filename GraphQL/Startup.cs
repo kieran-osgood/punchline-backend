@@ -90,6 +90,7 @@ namespace GraphQL
                 .AddType<JokeMutations>()
                 .AddType<UserMutations>()
                 .AddType<JokeType>()
+                .AddType<UserType>()
                 .AddType<CategoryType>()
                 .AddType<UserJokeHistoryType>()
                 .AddDataLoader<JokeByIdDataLoader>()
