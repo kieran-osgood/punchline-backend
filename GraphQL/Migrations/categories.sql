@@ -1,22 +1,23 @@
-INSERT INTO Categories(Name,Id,Image) VALUES ('Animal',1,'https://joke-categories-547.s3.amazonaws.com/animal.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Other / Misc',2,'https://joke-categories-547.s3.amazonaws.com/1.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Bar',3,'https://joke-categories-547.s3.amazonaws.com/bar.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('One Liners',4,'https://joke-categories-547.s3.amazonaws.com/1.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Puns',5,'https://joke-categories-547.s3.amazonaws.com/1.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Lawyer',6,'https://joke-categories-547.s3.amazonaws.com/1.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Sports',7,'https://joke-categories-547.s3.amazonaws.com/1.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Medical',8,'https://joke-categories-547.s3.amazonaws.com/doctor.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('News / Politics',9,'https://joke-categories-547.s3.amazonaws.com/politics.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Men / Women',10,'https://joke-categories-547.s3.amazonaws.com/dad.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Gross',11,'https://joke-categories-547.s3.amazonaws.com/1.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Blonde',12,'https://joke-categories-547.s3.amazonaws.com/blonde.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Yo Momma',13,'https://joke-categories-547.s3.amazonaws.com/insult.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Redneck',14,'https://joke-categories-547.s3.amazonaws.com/redneck.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Religious',15,'https://joke-categories-547.s3.amazonaws.com/priest.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('At Work',16,'https://joke-categories-547.s3.amazonaws.com/office.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('College',17,'https://joke-categories-547.s3.amazonaws.com/college.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Lightbulb',18,'https://joke-categories-547.s3.amazonaws.com/lightbulb.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Children',19,'https://joke-categories-547.s3.amazonaws.com/children.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Insults',20,'https://joke-categories-547.s3.amazonaws.com/insult.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Knock-Knock',21,'https://joke-categories-547.s3.amazonaws.com/knock-knock.svg');
-INSERT INTO Categories(Name,Id,Image) VALUES ('Tech',22,'https://joke-categories-547.s3.amazonaws.com/robot.svg');
+INSERT INTO `Categories` (`Id`, `Name`, `Image`) VALUES
+(1, 'Animal', 'https://web.punch-line.co.uk/categories/animal.svg'),
+(2, 'Other / Misc', 'https://web.punch-line.co.uk/categories/1.svg'),
+(3, 'Bar', 'https://web.punch-line.co.uk/categories/bar.svg'),
+(4, 'One Liners', 'https://web.punch-line.co.uk/categories/1.svg'),
+(5, 'Puns', 'https://web.punch-line.co.uk/categories/1.svg'),
+(6, 'Lawyer', 'https://web.punch-line.co.uk/categories/1.svg'),
+(7, 'Sports', 'https://web.punch-line.co.uk/categories/1.svg'),
+(8, 'Medical', 'https://web.punch-line.co.uk/categories/doctor.svg'),
+(9, 'News / Politics', 'https://web.punch-line.co.uk/categories/politics.svg'),
+(10, 'Men / Women', 'https://web.punch-line.co.uk/categories/dad.svg'),
+(11, 'Gross', 'https://web.punch-line.co.uk/categories/1.svg'),
+(12, 'Blonde', 'https://web.punch-line.co.uk/categories/blonde.svg'),
+(13, 'Yo Momma', 'https://web.punch-line.co.uk/categories/insult.svg'),
+(14, 'Redneck', 'https://web.punch-line.co.uk/categories/redneck.svg'),
+(15, 'Religious', 'https://web.punch-line.co.uk/categories/priest.svg'),
+(16, 'At Work', 'https://web.punch-line.co.uk/categories/office.svg'),
+(17, 'College', 'https://web.punch-line.co.uk/categories/college.svg'),
+(18, 'Lightbulb', 'https://web.punch-line.co.uk/categories/lightbulb.svg'),
+(19, 'Children', 'https://web.punch-line.co.uk/categories/children.svg'),
+(20, 'Insults', 'https://web.punch-line.co.uk/categories/insult.svg'),
+(21, 'Knock-Knock', 'https://web.punch-line.co.uk/categories/knock-knock.svg'),
+(22, 'Tech', 'https://web.punch-line.co.uk/categories/robot.svg');
