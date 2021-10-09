@@ -39,6 +39,7 @@ type Category implements Node {
 type Joke implements Node {
   id: ID!
   categories: [Category]
+  length: JokeLength!
   title: String!
   body: String!
   positiveRating: Int!
@@ -255,6 +256,14 @@ input JokeFilterInput {
   categories: ListFilterInputTypeOfCategoryFilterInput
   users: ListFilterInputTypeOfUserFilterInput
   jokeReports: ListFilterInputTypeOfJokeReportFilterInput
+  length: JokeLengthOperationFilterInput
+}
+
+input JokeLengthOperationFilterInput {
+  eq: JokeLength
+  neq: JokeLength
+  in: [JokeLength!]
+  nin: [JokeLength!]
 }
 
 input JokeQueryInput {
@@ -288,6 +297,7 @@ input JokeSortInput {
   skipRating: SortEnumType
   reportCount: SortEnumType
   explicitContent: SortEnumType
+  length: SortEnumType
 }
 
 input ListFilterInputTypeOfCategoryFilterInput {

@@ -1,44 +1,7 @@
 ﻿{
   "data": {
     "jokes": {
-      "nodes": [
-        {
-          "id": "Sm9rZQppMQ==",
-          "body": "What do you call a cow with no legs? Ground Beef!"
-        },
-        {
-          "id": "Sm9rZQppMg==",
-          "body": "What do you call a cow jumping over a barbed wire fence? Utter destruction."
-        },
-        {
-          "id": "Sm9rZQppNA==",
-          "body": "What\u0027s black and white and red all over? A newspaper."
-        },
-        {
-          "id": "Sm9rZQppNQ==",
-          "body": "So, this guy walks into a bar. And says, \u0022ouch\u0022."
-        },
-        {
-          "id": "Sm9rZQppNg==",
-          "body": "If the opposite of pro is con, isn\u0027t the opposite of progress, congress?"
-        },
-        {
-          "id": "Sm9rZQppNw==",
-          "body": "What do you call a guy with no arms or legs floating in the ocean? Bob!"
-        },
-        {
-          "id": "Sm9rZQppOA==",
-          "body": "I went to a wedding the other day.  Two antennas were getting married.  It wasn\u0027t much of a wedding ceremony, but it was one heck of a reception!"
-        },
-        {
-          "id": "Sm9rZQppOQ==",
-          "body": "There\u0027s this dyslexic guy... he walked into a bra..."
-        },
-        {
-          "id": "Sm9rZQppMTA=",
-          "body": "Joel: \u0022How\u0027s the progress on new house that you are building Pete?\u0022 Peter: \u0022Things are really slow at the moment.\u0022 Joel: \u0022Yeah, I guess all this rain would be putting a dampener on things...\u0022"
-        }
-      ]
+      "nodes": []
     }
   }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GraphQL.Data;
 using GraphQL.Extensions;
@@ -21,7 +22,7 @@ namespace GraphQL.Entities.Joke
         public record JokeQueryInput(
             [property: ID(nameof(Joke))] int? DeepLinkedJokeId,
             [property: ID(nameof(Data.Category))] List<int>? BlockedCategoryIds = default!,
-            JokeLength JokeLength = JokeLength.Medium,
+            JokeLength[] JokeLengths = default!,
             bool ProfanityFilter = true);
 
         [Authorize]
@@ -36,8 +37,6 @@ namespace GraphQL.Entities.Joke
             JokeQueryInput input)
         {
             // Casting to variable because of upstream bug: https://github.com/npgsql/efcore.pg/issues/1281
-            var length = (int) input.JokeLength;
-
             var user = await (from u in context.Users where u.FirebaseUid == userUid select u).FirstOrDefaultAsync();
             if (user is null)
             {
@@ -45,7 +44,7 @@ namespace GraphQL.Entities.Joke
             }
 
             var jokes = (from j in context.Jokes
-                where j.Body.Length <= length
+                where input.JokeLengths.Contains(j.Length)
                 where !context.UserJokeHistory.Where(x => x.UserId == user.Id).Any(x => x.JokeId == j.Id)
                 select j);
 
@@ -70,7 +69,7 @@ namespace GraphQL.Entities.Joke
             {
                 jokes = from j in jokes where j.ExplicitContent == false select j;
             }
-
+            
             return jokes;
         }
     }

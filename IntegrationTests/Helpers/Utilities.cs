@@ -33,57 +33,66 @@ namespace IntegrationTests.Helpers
                 {
                     Body = "What do you call a cow with no legs? Ground Beef!",
                     Id = 1,
-                    Title = "Cow With No Legs"
+                    Title = "Cow With No Legs",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body = "What do you call a cow jumping over a barbed wire fence? Utter destruction.",
                     Id = 2,
-                    Title = "Jumping Cow"
+                    Title = "Jumping Cow",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body = "What's black and white and red all over? A newspaper.",
                     Id = 4,
-                    Title = "Black, White and Red"
+                    Title = "Black, White and Red",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body = "So, this guy walks into a bar. And says, \"ouch\".",
                     Id = 5,
-                    Title = "Guy in a Bar"
+                    Title = "Guy in a Bar",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body = "If the opposite of pro is con, isn't the opposite of progress, congress?",
                     Id = 6,
-                    Title = "Progress"
+                    Title = "Progress",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body = "What do you call a guy with no arms or legs floating in the ocean? Bob!",
                     Id = 7,
-                    Title = "Guy with no Limbs"
+                    Title = "Guy with no Limbs",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body =
                         "I went to a wedding the other day.  Two antennas were getting married.  It wasn't much of a wedding ceremony, but it was one heck of a reception!",
                     Id = 8,
-                    Title = "Antenna"
+                    Title = "Antenna",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body = "There's this dyslexic guy... he walked into a bra...",
                     Id = 9,
-                    Title = "Into the Bar"
+                    Title = "Into the Bar",
+                    Length = JokeLength.Small
                 },
                 new()
                 {
                     Body =
                         "Joel: \"How's the progress on new house that you are building Pete?\" Peter: \"Things are really slow at the moment.\" Joel: \"Yeah, I guess all this rain would be putting a dampener on things...\"",
                     Id = 10,
-                    Title = "Rain"
+                    Title = "Rain",
+                    Length = JokeLength.Medium
                 }
             };
         }

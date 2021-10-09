@@ -20,14 +20,15 @@ namespace IntegrationTests.Tests
         {
             var factory =
                 new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());
-
-            var input = new JokeQueries.JokeQueryInput(null, null, length, false);
+            var input = new JokeQueries.JokeQueryInput(null, null, new[] {length}, false);
+            
             var query =
                 @"query Jokes($input: JokeQueryInput!) {
                   jokes(input: $input) {
                     nodes {
                       id
                       body
+                      length
                     }
                   }
                 }";
@@ -43,7 +44,6 @@ namespace IntegrationTests.Tests
             var result = await executor.ExecuteAsync(request);
 
             Assert.Null(result.Errors);
-
             Snapshot.Match(await result.ToJsonAsync(), $"{nameof(Jokes_Length_Filters_Results)}_{length}");
         }
     }

@@ -20,7 +20,9 @@ namespace GraphQL.Data
         public int NegativeRating { get; set; } = 0;
         public int SkipRating { get; set; } = 0;
         public int ReportCount { get; set; } = 0;
-        public bool ExplicitContent { get; set; } = false;    
+        public bool ExplicitContent { get; set; } = false;
+        public JokeLength Length { get; set; }
+
         /**
          * Entity Mappings
          */
@@ -28,12 +30,11 @@ namespace GraphQL.Data
 
         public virtual ICollection<Category> Categories { get; set; } = default!;
         public virtual ICollection<User> Users { get; set; } = default!;
-        public virtual ICollection<JokeReport> JokeReports{ get; set; } = default!;
+        public virtual ICollection<JokeReport> JokeReports { get; set; } = default!;
 
         /*
          * Unmapped Resolver Fields
          */
-
     }
 
     public enum JokeLength

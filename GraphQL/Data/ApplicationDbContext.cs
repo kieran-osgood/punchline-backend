@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL.Data
@@ -17,6 +18,11 @@ namespace GraphQL.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<Joke>()
+                .Property(e => e.Length)
+                .HasConversion<string>();
+            
             modelBuilder
                 .Entity<Joke>(entity =>
                 {
