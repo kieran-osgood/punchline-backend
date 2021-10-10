@@ -39,7 +39,6 @@ type Category implements Node {
 type Joke implements Node {
   id: ID!
   categories: [Category]
-  length: JokeLength!
   title: String!
   body: String!
   positiveRating: Int!
@@ -47,6 +46,7 @@ type Joke implements Node {
   skipRating: Int!
   reportCount: Int!
   explicitContent: Boolean!
+  length: JokeLength!
   userJokeHistories: [UserJokeHistory!]!
   users: [User!]!
   jokeReports: [JokeReport!]!
@@ -252,11 +252,11 @@ input JokeFilterInput {
   skipRating: ComparableInt32OperationFilterInput
   reportCount: ComparableInt32OperationFilterInput
   explicitContent: BooleanOperationFilterInput
+  length: JokeLengthOperationFilterInput
   userJokeHistories: ListFilterInputTypeOfUserJokeHistoryFilterInput
   categories: ListFilterInputTypeOfCategoryFilterInput
   users: ListFilterInputTypeOfUserFilterInput
   jokeReports: ListFilterInputTypeOfJokeReportFilterInput
-  length: JokeLengthOperationFilterInput
 }
 
 input JokeLengthOperationFilterInput {
@@ -269,7 +269,7 @@ input JokeLengthOperationFilterInput {
 input JokeQueryInput {
   deepLinkedJokeId: ID
   blockedCategoryIds: [ID!]
-  jokeLength: JokeLength! = MEDIUM
+  jokeLengths: [JokeLength!]!
   profanityFilter: Boolean! = true
 }
 
