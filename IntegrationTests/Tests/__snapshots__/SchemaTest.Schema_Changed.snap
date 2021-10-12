@@ -96,6 +96,7 @@ type Mutation {
   addJokeReport(input: JokeReportInput!): MutateJokeReportPayload! @authorize(apply: BEFORE_RESOLVER)
   login(input: UserLoginInput!): UserPayload!
   completeOnboarding: UserPayload! @authorize(apply: BEFORE_RESOLVER)
+  deleteUser: Boolean! @authorize(apply: BEFORE_RESOLVER)
 }
 
 "Information about pagination in a connection."
