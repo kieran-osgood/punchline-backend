@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using FirebaseAdmin.Auth;
 using GraphQL.Common;
 using GraphQL.Data;
 using GraphQL.Extensions;
@@ -89,6 +90,36 @@ namespace GraphQL.Entities.User
             {
                 _logger.LogError("{Message}", e.ToString());
                 return new UserPayload(new List<UserError> {new(ErrorCodes.ServerError)});
+            }
+        }
+        
+        [Authorize]
+        [UseApplicationDbContext]
+        public async Task<bool> DeleteUser(
+            [ScopedService] ApplicationDbContext context,
+            [GlobalState(GlobalStates.HttpContext.UserUid)]
+            string userUid,
+            CancellationToken cancellationToken
+        )
+        {
+            try
+            {
+                var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == userUid,
+                    cancellationToken);
+                
+                if (user is null) 
+                    throw new Exception($"Unable to locate user: {userUid}");
+                
+                await FirebaseAuth.DefaultInstance.DeleteUserAsync(userUid, cancellationToken);
+                context.Remove(user);
+                
+                await context.SaveChangesAsync(cancellationToken);
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("{Message}", e.ToString());
+                return false;
             }
         }
     }
