@@ -7,6 +7,7 @@ using Google.Apis.Auth.OAuth2;
 using GraphQL.Authentication;
 using GraphQL.Data;
 using GraphQL.DataLoader;
+using GraphQL.Entities.BugReport;
 using GraphQL.Entities.Category;
 using GraphQL.Entities.Joke;
 using GraphQL.Entities.JokeReport;
@@ -93,6 +94,7 @@ namespace GraphQL
                 .AddType<UserJokeHistoryMutations>()
                 .AddType<JokeMutations>()
                 .AddType<JokeReportMutations>()
+                .AddType<BugReportMutations>()
                 .AddType<UserMutations>()
                 .AddType<JokeType>()
                 .AddType<JokeReportType>()

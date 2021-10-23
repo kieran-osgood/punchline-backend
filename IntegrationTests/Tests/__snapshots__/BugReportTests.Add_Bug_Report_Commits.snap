@@ -1,0 +1,11 @@
+﻿{
+  "data": {
+    "addBugReport": {
+      "bugReport": {
+        "id": 1,
+        "description": "This joke was despicable!!!!!!!"
+      },
+      "errors": null
+    }
+  }
+}

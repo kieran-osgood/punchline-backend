@@ -15,6 +15,7 @@ namespace GraphQL.Data
         public DbSet<Category> Categories { get; set; } = default!;
         public DbSet<UserJokeHistory> UserJokeHistory { get; set; } = default!;
         public DbSet<JokeReport> JokeReports { get; set; } = default!;
+        public DbSet<BugReport> BugReports { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
