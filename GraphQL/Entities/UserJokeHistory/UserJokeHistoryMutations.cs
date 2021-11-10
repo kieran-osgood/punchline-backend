@@ -26,7 +26,9 @@ namespace GraphQL.Entities.UserJokeHistory
             _logger = logger.CreateLogger<UserJokeHistoryMutations>();
         }
 
-        public record RateJokeInput([property: ID(nameof(Joke))] int JokeId, RatingValue Rating, bool Bookmarked = false);
+        public record RateJokeInput([property: ID(nameof(Joke))] int JokeId, RatingValue Rating,
+            bool Bookmarked = false);
+
         [Authorize]
         [UseApplicationDbContext]
         public async Task<MutateUserJokeHistoryPayload> RateJoke(
@@ -57,6 +59,23 @@ namespace GraphQL.Entities.UserJokeHistory
                     CreatedAt = DateTime.Now
                 };
                 user.UserJokeHistories.Add(userJokeHistory);
+
+                switch (input.Rating)
+                {
+                   case RatingValue.Good:
+                       joke.PositiveRating += 1;
+                       break;
+                   case RatingValue.Bad:
+                       joke.NegativeRating += 1;
+                       break;
+                   case RatingValue.Skip:
+                       joke.SkipRating += 1;
+                       break;
+                   case RatingValue.Reported:
+                       joke.ReportCount+= 1;
+                       break;
+                }
+                
                 await context.SaveChangesAsync(cancellationToken);
                 return new MutateUserJokeHistoryPayload(userJokeHistory);
             }
@@ -116,7 +135,8 @@ namespace GraphQL.Entities.UserJokeHistory
             }
         }
 
-        public record UpdateBookmarkInput([property: ID(nameof(Data.UserJokeHistory))] int Id, RatingValue? Rating,
+        public record UpdateBookmarkInput([property: ID(nameof(Data.UserJokeHistory))]
+            int Id, RatingValue? Rating,
             bool? Bookmarked = false);
 
         [Authorize]
@@ -146,9 +166,9 @@ namespace GraphQL.Entities.UserJokeHistory
                     return new MutateUserJokeHistoryPayload(new List<UserError>
                         {new(ErrorCodes.NotAuthorized)});
                 }
-                
+
                 if (input.Rating is not null) userJokeHistory.Rating = (RatingValue) input.Rating;
-                if (input.Bookmarked != null) userJokeHistory.Bookmarked= (bool) input.Bookmarked;
+                if (input.Bookmarked != null) userJokeHistory.Bookmarked = (bool) input.Bookmarked;
 
                 await context.SaveChangesAsync(cancellationToken);
                 return new MutateUserJokeHistoryPayload(userJokeHistory);
