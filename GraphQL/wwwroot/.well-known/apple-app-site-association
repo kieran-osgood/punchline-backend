@@ -5,7 +5,8 @@
       {
         "appID": "com.ko.punchline",
         "paths": [
-          "/share/joke"
+          "/share/joke",
+          "/login"
         ]
       }
     ]

@@ -54,7 +54,9 @@ namespace GraphQL.Entities.BugReport
 
                 await context.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
-                
+                // Post to sentry to log the data with them 
+                // const userFeedbackUrl = `https://sentry.io/api/0/projects/${SENTRY_ORGANIZATION_SLUG}/${SENTRY_PROJECT_SLUG}/user-feedback/`
+ 
                 return new MutateBugReportPayload(bugReport);
             }
             catch (DbUpdateException e)

@@ -42,3 +42,5 @@ run:
 run-ecs:
 ## Requires authentication # ➜ docker login -u AWS --password $(AWS_PROFILE=iamadmin-punchline aws ecr get-login-password --region us-east-1) 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend
 	docker run -it --rm -p 8080:80 --name punchline-backend-container 345637428723.dkr.ecr.us-east-1.amazonaws.com/punchline-backend:52e8df9dc8f71973d3db0cd5d863f0dda45a73f5 
+prod-db-migrate:
+	dotnet ef database update $(migration) --context=ApplicationDbContext ${project} -- --environment Production

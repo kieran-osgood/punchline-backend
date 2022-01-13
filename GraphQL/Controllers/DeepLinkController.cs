@@ -48,5 +48,13 @@ namespace GraphQL.Controllers
 
             return new RedirectResult("404");
         }
+        
+        [HttpGet]
+        [Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public RedirectResult TroubleLoggingIn()
+        {
+            return new("punchline://login");
+        }
     }
 }
