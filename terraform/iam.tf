@@ -45,7 +45,7 @@ resource "aws_iam_policy" "iamadmin-ECRFullAccess" {
         "Sid" : "VisualEditor1",
         "Effect" : "Allow",
         "Action" : "ecr:*",
-        "Resource" : "arn:aws:ecr:us-east-1:345637428723:repository/punchline-backend"
+        "Resource" : aws_ecr_repository.punchline-backend.arn
       }
     ]
   })
