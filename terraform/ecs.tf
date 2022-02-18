@@ -7,30 +7,45 @@ resource "aws_ecs_cluster" "backend" {
   }
 }
 
-# resource "aws_ecs_service" "mongo" {
-#   name            = "mongodb"
-#   cluster         = aws_ecs_cluster.foo.id
-#   task_definition = aws_ecs_task_definition.mongo.arn
-#   desired_count   = 3
-#   iam_role        = aws_iam_role.foo.arn
-#   depends_on      = [aws_iam_role_policy.foo]
+resource "aws_ecs_service" "punchline-backend" {
+  name                              = "punchline-backend-service"
+  desired_count                     = 1
+  enable_ecs_managed_tags           = true
+  health_check_grace_period_seconds = 60
+  iam_role                          = "aws-service-role"
+  depends_on                        = [module.managed-policies.AmazonECSServiceRolePolicy]
+  launch_type                       = "FARGATE"
+  platform_version                  = "LATEST"
+  cluster                           = aws_ecs_cluster.backend.id
+  task_definition                   = aws_ecs_task_definition.punchline-backend.arn
+  wait_for_steady_state             = false
+  tags                              = {}
+  tags_all                          = {}
+  deployment_circuit_breaker {
+    enable   = false
+    rollback = false
+  }
 
-#   ordered_placement_strategy {
-#     type  = "binpack"
-#     field = "cpu"
-#   }
+  timeouts {}
 
-#   load_balancer {
-#     target_group_arn = aws_lb_target_group.foo.arn
-#     container_name   = "mongo"
-#     container_port   = 8080
-#   }
+  network_configuration {
+    assign_public_ip = true
+    security_groups = [
+      "sg-04c26a14ebff72546",
+    ]
+    subnets = [
+      aws_subnet.punchline-web-A.id,
+      aws_subnet.punchline-web-B.id
 
-#   placement_constraints {
-#     type       = "memberOf"
-#     expression = "attribute:ecs.availability-zone in [us-west-2a, us-west-2b]"
-#   }
-# }
+    ]
+  }
+
+  load_balancer { # forces replacement
+    container_name   = "container-of-punchline-backend"
+    container_port   = 80
+    target_group_arn = aws_lb_target_group.tg-http-api-cluster.arn
+  }
+}
 
 resource "aws_ecs_task_definition" "punchline-backend" {
   family = "container-of-punchline-backend"
