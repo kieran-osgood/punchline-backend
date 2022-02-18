@@ -56,3 +56,4 @@ Thumbs.db
 
 #Terraform
 terraform/plan
+.vs/*
