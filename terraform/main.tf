@@ -1,4 +1,3 @@
-// Provider configuration
 terraform {
   required_providers {
     aws = {
@@ -10,12 +9,4 @@ terraform {
 
 provider "aws" {
   region = "us-east-1"
-}
-
-resource "aws_ecs_cluster" "punchline-backend-cluster" {
-  name = "punchline-backend-cluster"
-  setting {
-    name  = "containerInsights"
-    value = "disabled"
-  }
 }
