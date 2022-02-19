@@ -1,10 +1,19 @@
 resource "aws_ecs_cluster" "backend" {
   name = "punchline-backend-cluster"
-
   setting {
     name  = "containerInsights"
     value = "disabled"
   }
+
+}
+
+resource "aws_ecs_cluster_capacity_providers" "fargate" {
+  cluster_name = aws_ecs_cluster.backend.name
+
+  capacity_providers = [
+    "FARGATE",
+    "FARGATE_SPOT"
+  ]
 }
 
 resource "aws_ecs_service" "punchline-backend" {
