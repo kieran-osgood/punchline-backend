@@ -8,6 +8,10 @@ resource "aws_vpc" "Punchline" {
   }
 }
 
+resource "aws_internet_gateway" "punchline-igw" {
+  vpc_id = aws_vpc.Punchline.id
+}
+
 resource "aws_subnet" "punchline-web-A" {
   vpc_id                  = aws_vpc.Punchline.id
   map_public_ip_on_launch = true
