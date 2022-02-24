@@ -4,16 +4,6 @@ resource "aws_ecs_cluster" "backend" {
     name  = "containerInsights"
     value = "disabled"
   }
-
-}
-
-resource "aws_ecs_cluster_capacity_providers" "fargate" {
-  cluster_name = aws_ecs_cluster.backend.name
-
-  capacity_providers = [
-    "FARGATE",
-    "FARGATE_SPOT"
-  ]
 }
 
 resource "aws_ecs_service" "punchline-backend" {
@@ -23,7 +13,7 @@ resource "aws_ecs_service" "punchline-backend" {
   health_check_grace_period_seconds = 60
   iam_role                          = "aws-service-role"
   depends_on                        = [module.managed-policies.AmazonECSServiceRolePolicy]
-  launch_type                       = "FARGATE"
+  launch_type                       = "EC2"
   platform_version                  = "LATEST"
   cluster                           = aws_ecs_cluster.backend.id
   task_definition                   = aws_ecs_task_definition.punchline-backend.arn
@@ -45,7 +35,6 @@ resource "aws_ecs_service" "punchline-backend" {
     subnets = [
       aws_subnet.punchline-web-A.id,
       aws_subnet.punchline-web-B.id
-
     ]
   }
 
@@ -61,13 +50,16 @@ resource "aws_ecs_task_definition" "punchline-backend" {
   cpu    = "256"
   memory = "1024"
   requires_compatibilities = [
-    "FARGATE",
+    "EC2",
   ]
-  task_role_arn      = "arn:aws:iam::345637428723:role/ecsTaskExecutionRole"
+  # TODO: replace with the managed policies module
+  task_role_arn = "arn:aws:iam::345637428723:role/ecsTaskExecutionRole"
+  # TODO: replace with the managed policies module
   execution_role_arn = "arn:aws:iam::345637428723:role/ecsTaskExecutionRole"
   tags_all           = {}
   tags               = {}
   skip_destroy       = false
+  # TODO: replace this to be the set with image of latest
   container_definitions = jsonencode([
     {
       name              = "container-of-punchline-backend"
@@ -87,4 +79,55 @@ resource "aws_ecs_task_definition" "punchline-backend" {
       volumesFrom = []
     }
   ])
+}
+
+resource "aws_ecs_cluster_capacity_providers" "ec2_provider" {
+  cluster_name       = aws_ecs_cluster.backend.name
+  capacity_providers = [aws_ecs_capacity_provider.ec2_provider.name]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = aws_ecs_capacity_provider.ec2_provider.name
+  }
+}
+
+resource "aws_ecs_capacity_provider" "ec2_provider" {
+  name                           = "ec2_provider"
+  managed_termination_protection = "ENABLED"
+
+  managed_scaling {
+    maximum_scaling_step_size = 1
+    minimum_scaling_step_size = 1
+    status                    = "ENABLED"
+    target_capacity           = 1
+  }
+
+  auto_scaling_group_provider {
+    auto_scaling_group_arn = aws_autoscaling_group.backend.arn
+  }
+}
+
+resource "aws_autoscaling_group" "backend" {
+  availability_zones = ["us-east-1a"]
+  desired_capacity   = 1
+  max_size           = 1
+  min_size           = 1
+
+  tag {
+    key                 = "AmazonECSManaged"
+    value               = true
+    propagate_at_launch = true
+  }
+
+  launch_template {
+    id      = aws_launch_template.punchline-backend.id
+    version = "$Latest"
+  }
+}
+
+resource "aws_launch_template" "punchline-backend" {
+  name_prefix   = "punchline-backend"
+  image_id      = "ami-1a2b3c"
+  instance_type = "t2.micro"
 }
