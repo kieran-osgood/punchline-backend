@@ -1,6 +1,6 @@
 # Get Started
 Before running the application there are a number of steps required to get the environment setup.
-It is assumed you will already have installed the .NET 5 development SDK, and ensure you the dotnet cli too installed (if `dotnet -h` responds anything other than "command not found" you're good to go).
+It is assumed you will already have installed the .NET 6 development SDK, and ensure you the dotnet cli too installed (if `dotnet -h` responds anything other than "command not found" you're good to go).
 Additionally docker and docker-compose are required to run this project.
 
 ## Pre-Requisites

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using GraphQL.Common;
 using GraphQL.Data;
 using GraphQL.Extensions;
-using GraphQL.Static;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
@@ -17,7 +16,7 @@ using ErrorCodes = GraphQL.Common.ErrorCodes;
 
 namespace GraphQL.Entities.BugReport
 {
-    [ExtendObjectType(ObjectTypes.Mutation)]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public class BugReportMutations
     {
         private readonly ILogger<BugReportMutations> _logger;
@@ -43,6 +42,9 @@ namespace GraphQL.Entities.BugReport
             {
                 await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
                 var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == userUid, cancellationToken);
+
+                if (user == null) return new MutateBugReportPayload(new List<UserError>
+                    {new(ErrorCodes.ServerError)});
 
                 var bugReport = new Data.BugReport()
                 {

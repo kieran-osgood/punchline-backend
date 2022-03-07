@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GraphQL.Data;
 using GraphQL.Extensions;
-using GraphQL.Static;
+
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
@@ -16,7 +16,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL.Entities.Joke
 {
-    [ExtendObjectType(ObjectTypes.Query)]
+    [ExtendObjectType(OperationTypeNames.Query)]
     public class JokeQueries
     {
         public record JokeQueryInput(
@@ -26,12 +26,11 @@ namespace GraphQL.Entities.Joke
             bool ProfanityFilter = true);
 
         [Authorize]
-        [UseApplicationDbContext]
         [UsePaging]
         [UseFiltering]
         [UseSorting]
         public async Task<IQueryable<Data.Joke>> GetJokes(
-            [ScopedService] ApplicationDbContext context,
+            ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
             string? userUid,
             JokeQueryInput input)

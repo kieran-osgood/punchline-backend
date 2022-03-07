@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Net;
 using System.Security.Claims;
 using FirebaseAdmin;
@@ -13,10 +12,11 @@ using GraphQL.Entities.Joke;
 using GraphQL.Entities.JokeReport;
 using GraphQL.Entities.User;
 using GraphQL.Entities.UserJokeHistory;
+using GraphQL.Nodes;
 using GraphQL.Repositories.Category;
-using static GraphQL.Static.ObjectTypes;
-using GraphQL.Types;
+using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.Data;
 using HotChocolate.Types.Pagination;
 using HotChocolate.Types.Relay;
 using Microsoft.AspNetCore.Builder;
@@ -26,6 +26,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Path = System.IO.Path;
 
 namespace GraphQL
 {
@@ -70,13 +71,44 @@ namespace GraphQL
             {
                 Credential = GoogleCredential.FromFile(firebaseCredential),
             }, _environment.IsEnvironment("Testing") ? _firebaseName : "[DEFAULT]");
-            
+
             services.AddSingleton<IIdSerializer, IdSerializer>();
-            
+
             services.AddHttpContextAccessor();
             services
                 .AddGraphQLServer()
+                .AddQueryType()
+                .AddMutationType()
+                // .AddMutationConventions()
+                .AddTypeExtension<JokeQueries>()
+                .AddTypeExtension<CategoryQueries>()
+                .AddTypeExtension<UserJokeHistoryQueries>()
+                
+                .AddTypeExtension<UserJokeHistoryMutations>()
+                .AddTypeExtension<JokeMutations>()
+                .AddTypeExtension<JokeReportMutations>()
+                .AddTypeExtension<BugReportMutations>()
+                .AddTypeExtension<UserMutations>()
+                
+                .AddTypeExtension<JokeNode>()
+                .AddTypeExtension<JokeReportNode>()
+                .AddTypeExtension<UserNode>()
+                .AddTypeExtension<CategoryNode>()
+                .AddTypeExtension<UserJokeHistoryNode>()
+                
+                .AddDataLoader<JokeByIdDataLoader>()
+                .AddDataLoader<JokeReportByIdDataLoader>()
+                .AddDataLoader<CategoryByIdDataLoader>()
+                .AddDataLoader<UserJokeHistoryByIdDataLoader>()
+
+                .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
+                .RegisterService<IDbContextFactory<ApplicationDbContext>>(ServiceKind.Synchronized)
+                
+                .AddSorting()
+                .AddFiltering()
+                .AddGlobalObjectIdentification()
                 .SetPagingOptions(new PagingOptions {InferConnectionNameFromField = false})
+                .AddAuthorization()
                 .AddHttpRequestInterceptor((context, executor, builder, token) =>
                 {
                     builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
@@ -86,28 +118,6 @@ namespace GraphQL
 
                     return default;
                 })
-                .AddQueryType(d => d.Name(Query))
-                .AddType<JokeQueries>()
-                .AddType<CategoryQueries>()
-                .AddType<UserJokeHistoryQueries>()
-                .AddMutationType(d => d.Name(Mutation))
-                .AddType<UserJokeHistoryMutations>()
-                .AddType<JokeMutations>()
-                .AddType<JokeReportMutations>()
-                .AddType<BugReportMutations>()
-                .AddType<UserMutations>()
-                .AddType<JokeType>()
-                .AddType<JokeReportType>()
-                .AddType<UserType>()
-                .AddType<CategoryType>()
-                .AddType<UserJokeHistoryType>()
-                .AddDataLoader<JokeByIdDataLoader>()
-                .AddDataLoader<JokeReportByIdDataLoader>()
-                .AddDataLoader<CategoryByIdDataLoader>()
-                .AddDataLoader<UserJokeHistoryByIdDataLoader>()
-                .AddSorting()
-                .AddFiltering()
-                .AddAuthorization()
                 .SetPagingOptions(new PagingOptions
                 {
                     DefaultPageSize = 25,
@@ -124,7 +134,7 @@ namespace GraphQL
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();

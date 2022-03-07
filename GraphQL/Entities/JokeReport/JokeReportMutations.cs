@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using GraphQL.Common;
 using GraphQL.Data;
 using GraphQL.Extensions;
-using GraphQL.Static;
+
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
@@ -17,7 +17,7 @@ using ErrorCodes = GraphQL.Common.ErrorCodes;
 
 namespace GraphQL.Entities.JokeReport
 {
-    [ExtendObjectType(ObjectTypes.Mutation)]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public class JokeReportMutations
     {
         private readonly ILogger<JokeReportMutations> _logger;
@@ -44,6 +44,8 @@ namespace GraphQL.Entities.JokeReport
                 await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
                 var joke = await context.Jokes.FirstOrDefaultAsync(x => x.Id == input.Id, cancellationToken);
                 var user = await context.Users.FirstOrDefaultAsync(x => x.FirebaseUid == userUid, cancellationToken);
+
+                if (joke == null || user == null) throw new Exception("User is undefined");
 
                 var jokeReport = new Data.JokeReport()
                 {

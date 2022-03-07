@@ -6,7 +6,7 @@ using FirebaseAdmin.Auth;
 using GraphQL.Common;
 using GraphQL.Data;
 using GraphQL.Extensions;
-using GraphQL.Static;
+
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Types;
@@ -16,7 +16,7 @@ using ErrorCodes = GraphQL.Common.ErrorCodes;
 
 namespace GraphQL.Entities.User
 {
-    [ExtendObjectType(ObjectTypes.Mutation)]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public class UserMutations
     {
         private readonly ILogger<UserMutations> _logger;

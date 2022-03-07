@@ -27,7 +27,7 @@ namespace GraphQL.DataLoader
             CancellationToken cancellationToken)
         {
             await using ApplicationDbContext dbContext =
-                _dbContextFactory.CreateDbContext();
+                await _dbContextFactory.CreateDbContextAsync(cancellationToken);
 
             return await dbContext.Jokes
                 .Where(s => keys.Contains(s.Id))

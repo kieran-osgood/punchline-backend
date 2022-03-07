@@ -1,18 +1,15 @@
 using System.Reflection;
 using GraphQL.Data;
+using HotChocolate.Data;
 using HotChocolate.Types;
 using HotChocolate.Types.Descriptors;
 
 namespace GraphQL.Extensions
 {
-    public class UseApplicationDbContextAttribute : ObjectFieldDescriptorAttribute
+    public class UseApplicationDbContextAttribute : UseDbContextAttribute
     {
-        public override void OnConfigure(
-            IDescriptorContext context,
-            IObjectFieldDescriptor descriptor,
-            MemberInfo member)
+        public UseApplicationDbContextAttribute() : base(typeof(ApplicationDbContext))
         {
-            descriptor.UseDbContext<ApplicationDbContext>();
         }
     }
 }

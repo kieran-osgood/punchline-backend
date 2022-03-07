@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using FirebaseAdmin.Auth;
+using HotChocolate.Types.Relay;
 
 namespace GraphQL.Data
 {
@@ -11,6 +8,7 @@ namespace GraphQL.Data
         /*
          * Primary Key
          */
+        [ID]
         public int Id { get; set; }
         public string Description { get; set; } = "";
         public DateTime CreatedAt { get; set; } = default;
