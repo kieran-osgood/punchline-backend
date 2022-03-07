@@ -14,7 +14,6 @@ namespace GraphQL.Entities.UserJokeHistory
     public class UserJokeHistoryQueries
     {
         [Authorize]
-        [UseApplicationDbContext]
         [UsePaging]
         [UseFiltering]
         [UseSorting]

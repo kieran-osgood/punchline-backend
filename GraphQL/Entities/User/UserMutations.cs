@@ -26,7 +26,7 @@ namespace GraphQL.Entities.User
             _logger = logger.CreateLogger<UserMutations>();
         }
 
-        [UseApplicationDbContext]
+        
         public async Task<UserPayload> Login(
             [ScopedService] ApplicationDbContext context,
             UserLoginInput input,
@@ -65,7 +65,6 @@ namespace GraphQL.Entities.User
         }
 
         [Authorize]
-        [UseApplicationDbContext]
         public async Task<UserPayload> CompleteOnboarding(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
@@ -94,7 +93,6 @@ namespace GraphQL.Entities.User
         }
         
         [Authorize]
-        [UseApplicationDbContext]
         public async Task<bool> DeleteUser(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]

@@ -30,7 +30,6 @@ namespace GraphQL.Entities.JokeReport
         public record JokeReportInput([property: ID(nameof(Joke))] int Id, string Description);
 
         [Authorize]
-        [UseApplicationDbContext]
         public async Task<MutateJokeReportPayload> AddJokeReport(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]

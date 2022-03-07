@@ -20,7 +20,6 @@ namespace GraphQL.Entities.Category
             context.Categories;
 
         [Authorize]
-        [UseApplicationDbContext]
         [UsePaging]
         [UseFiltering]
         [UseSorting]

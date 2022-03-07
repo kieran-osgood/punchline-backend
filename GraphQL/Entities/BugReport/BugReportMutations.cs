@@ -29,7 +29,7 @@ namespace GraphQL.Entities.BugReport
         public record BugReportInput(string Description);
 
         [Authorize]
-        [UseApplicationDbContext]
+        
         public async Task<MutateBugReportPayload> AddBugReport(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]

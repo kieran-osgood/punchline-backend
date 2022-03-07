@@ -30,7 +30,6 @@ namespace GraphQL.Entities.UserJokeHistory
             bool Bookmarked = false);
 
         [Authorize]
-        [UseApplicationDbContext]
         public async Task<MutateUserJokeHistoryPayload> RateJoke(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
@@ -95,7 +94,6 @@ namespace GraphQL.Entities.UserJokeHistory
 
 
         [Authorize]
-        [UseApplicationDbContext]
         public async Task<MutateUserJokeHistoryPayload> DeleteUserJokeHistory(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
@@ -140,7 +138,6 @@ namespace GraphQL.Entities.UserJokeHistory
             bool? Bookmarked = false);
 
         [Authorize]
-        [UseApplicationDbContext]
         public async Task<MutateUserJokeHistoryPayload> UpdateUserJokeHistory(
             [ScopedService] ApplicationDbContext context,
             [GlobalState(GlobalStates.HttpContext.UserUid)]
