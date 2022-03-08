@@ -9,12 +9,12 @@ using Xunit;
 
 namespace IntegrationTests.Tests
 {
-    public class SchemaTest : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class SchemaTest : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         [Fact]
         public async Task Schema_Changed()
         {
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());; 
+            var factory = new CustomWebApplicationFactory<Program>().WithAuthentication(TestClaimsProvider.WithUserClaims());; 
             var executor = await factory.Services.GetRequestExecutorAsync();
             var schema = executor.Schema.Print(); 
             schema.MatchSnapshot();
@@ -23,7 +23,7 @@ namespace IntegrationTests.Tests
         [Fact]
         public async Task Schema_Download_Is_Secure()
         {
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());;
+            var factory = new CustomWebApplicationFactory<Program>().WithAuthentication(TestClaimsProvider.WithUserClaims());;
             
             // Arrange
             var client = factory.CreateDefaultClient();

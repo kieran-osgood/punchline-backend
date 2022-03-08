@@ -33,7 +33,7 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
-
+ 
     <ItemGroup>
       <ProjectReference Include="..\GraphQL\GraphQL.csproj" />
     </ItemGroup>

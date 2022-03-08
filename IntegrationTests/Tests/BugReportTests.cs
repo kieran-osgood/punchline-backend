@@ -14,13 +14,13 @@ using Xunit;
 
 namespace IntegrationTests.Tests
 {
-    public class BugReportTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class BugReportTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         [Fact]
         public async Task Add_Bug_Report_Commits()
         {
             var factory =
-                new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());
+                new CustomWebApplicationFactory<Program>().WithAuthentication(TestClaimsProvider.WithUserClaims());
             const string description = "This joke was despicable!!!!!!!";
 
             var query = 

@@ -10,7 +10,7 @@ using Xunit;
 
 namespace IntegrationTests.Tests
 {
-    public class JokeTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class JokeTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         [Theory]
         [InlineData(JokeLength.Small)]
@@ -19,7 +19,7 @@ namespace IntegrationTests.Tests
         public async Task Jokes_Length_Filters_Results(JokeLength length)
         {
             var factory =
-                new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());
+                new CustomWebApplicationFactory<Program>().WithAuthentication(TestClaimsProvider.WithUserClaims());
             var input = new JokeQueries.JokeQueryInput(null, null, new[] {length}, false);
             
             var query =

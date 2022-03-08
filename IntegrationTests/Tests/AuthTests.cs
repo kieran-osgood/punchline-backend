@@ -8,7 +8,7 @@ using Xunit;
 
 namespace IntegrationTests.Tests
 {
-    public class AuthTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class AuthTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         [Theory]
         [InlineData(@"query Jokes {jokes(input: {jokeLengths: []}) {nodes {id}}}")]
@@ -18,7 +18,7 @@ namespace IntegrationTests.Tests
         public async Task Unauthenticated_Request_On_Authorized_Endpoint_Denies_Access(string query)
         {
             // Setups a factory which has an AuthenticationScheme and Handler setup
-            var factory = new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims()); 
+            var factory = new CustomWebApplicationFactory<Program>().WithAuthentication(TestClaimsProvider.WithUserClaims()); 
             var request =
                 QueryRequestBuilder
                     .New()

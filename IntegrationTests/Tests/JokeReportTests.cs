@@ -14,13 +14,13 @@ using Xunit;
 
 namespace IntegrationTests.Tests
 {
-    public class JokeReportTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class JokeReportTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         [Fact]
         public async Task Add_Jokes_Report_Commits()
         {
             var factory =
-                new CustomWebApplicationFactory<Startup>().WithAuthentication(TestClaimsProvider.WithUserClaims());
+                new CustomWebApplicationFactory<Program>().WithAuthentication(TestClaimsProvider.WithUserClaims());
             var user = Utilities.GetValidAuthUser();
             var joke = Utilities.GetValidJoke();
             const string description = "This joke was despicable!!!!!!!";
