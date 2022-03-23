@@ -82,7 +82,7 @@ jobs:
           name: install dotnet-sdk
           command: |
             sudo apt-get update && \
-            sudo apt-get install -y dotnet-sdk-5.0
+            sudo apt-get install -y dotnet-sdk-6.0
       - run:
           name: Build Build and Test App
           command: |
