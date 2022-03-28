@@ -6,9 +6,21 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <RootNamespace>GraphQL</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- AWS CONFIG -->
+    <OutputType>Exe</OutputType>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+    <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+
+    <!-- Generate ready to run images during publishing to improve cold start time. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="7.1.0" />
     <PackageReference Include="FirebaseAdmin" Version="2.2.0" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.6.1" />
     <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="12.6.1" />

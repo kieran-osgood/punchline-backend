@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Path = System.IO.Path;
 using SO = System.IO.File;
 
 namespace GraphQL.Controllers

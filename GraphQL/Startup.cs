@@ -142,6 +142,7 @@ namespace GraphQL
 
             app.UseEndpoints(endpoints =>
             {
+                
                 endpoints.MapControllers();
                 endpoints.MapGraphQL("/graphql")
                     .WithOptions(new GraphQLServerOptions()
@@ -149,6 +150,11 @@ namespace GraphQL
                         EnableSchemaRequests = env.IsDevelopment(),
                         Tool = {Enable = env.IsDevelopment()}
                     });
+                endpoints.MapGet("/test", async context =>
+                {
+                    await context.Response.WriteAsync("Welcome to running ASP.NET Core on AWS Lambda");
+                });
+
             });
         }
     }
