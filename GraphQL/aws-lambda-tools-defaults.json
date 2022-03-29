@@ -8,7 +8,9 @@
   "profile": "iamadmin-punchline",
   "region": "us-east-1",
   "configuration": "Release",
-  "s3-prefix": "GraphQL/",
+  "s3-prefix": "punchline-backend-api-lambda/",
   "template": "serverless.template",
-  "template-parameters": ""
+  "template-parameters": "",
+  "stack-name": "GraphQL",
+  "s3-bucket": "punchline-backend-api-lambda"
 }
