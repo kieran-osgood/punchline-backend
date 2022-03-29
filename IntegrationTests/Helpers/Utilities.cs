@@ -131,7 +131,16 @@ namespace IntegrationTests.Helpers
                     Name = "Test User",
                     JokeCount = 0,
                     CreatedOn = new DateTime(),
-                    LastLogin = new DateTime()
+                    LastLogin = new DateTime(),
+                    Categories = new List<Category>
+                    {
+                        new()
+                        {
+                            Id = 4,
+                            Name = "TEST RECORD: this is a user category",
+                            Image = "s3:url"
+                        }
+                    }
                 },
             };
         }

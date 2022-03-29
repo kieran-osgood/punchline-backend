@@ -1,0 +1,19 @@
+﻿{
+  "data": {
+    "login": {
+      "user": {
+        "id": "VXNlcgppMQ==",
+        "firebaseUid": "n3mU54T2ZJTrS7DySfDtPf6dB9M2",
+        "name": "Test User",
+        "jokeCount": 0,
+        "categories": [
+          {
+            "id": "Q2F0ZWdvcnkKaTQ=",
+            "name": "TEST RECORD: this is a user category",
+            "image": "s3:url"
+          }
+        ]
+      }
+    }
+  }
+}
