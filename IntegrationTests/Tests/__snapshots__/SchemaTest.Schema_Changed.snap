@@ -8,7 +8,7 @@ interface Node {
   id: ID!
 }
 
-type BugReport {
+type BugReport implements Node {
   id: ID!
   description: String!
   reportingUser: User!

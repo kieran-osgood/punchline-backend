@@ -91,6 +91,7 @@ namespace GraphQL
                 .AddTypeExtension<UserMutations>()
                 
                 .AddTypeExtension<JokeNode>()
+                .AddTypeExtension<BugReportNode>()
                 .AddTypeExtension<JokeReportNode>()
                 .AddTypeExtension<UserNode>()
                 .AddTypeExtension<CategoryNode>()
