@@ -1,12 +1,5 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using GraphQL.Data;
 using GraphQL.DataLoader;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Microsoft.EntityFrameworkCore;
 
 namespace GraphQL.Nodes
@@ -16,6 +9,12 @@ namespace GraphQL.Nodes
     public class JokeNode
     {
         [NodeResolver]
+        public static Task<Joke> GetJokeAsync(
+            int id,
+            JokeByIdDataLoader jokeById,
+            CancellationToken cancellationToken)
+            => jokeById.LoadAsync(id, cancellationToken);
+
         [BindMember(nameof(Joke.Categories), Replace = true)]
         public async Task<IEnumerable<Category>> GetCategoriesAsync(
             [Parent] Joke joke,
@@ -31,5 +30,6 @@ namespace GraphQL.Nodes
 
             return await dataLoader.LoadAsync(ids ??  new List<int>(), cancellationToken);
         }
+        
     }
 }

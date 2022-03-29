@@ -16,8 +16,14 @@ namespace GraphQL.Nodes
     public class UserNode
     {
         [NodeResolver]
+        public static Task<User> GetUserAsync(
+            int id,
+            UserByIdDataLoader userById,
+            CancellationToken cancellationToken)
+            => userById.LoadAsync(id, cancellationToken);
+        
         [BindMember(nameof(User.Categories), Replace = true)]
-        public async Task<IEnumerable<Category>> GetUserCategoriesAsync(
+        public async Task<IEnumerable<Category>> GetCategoriesAsync(
             [Parent] User user,
             CategoryByIdDataLoader dataLoader,
             [ScopedService] ApplicationDbContext dbContext,

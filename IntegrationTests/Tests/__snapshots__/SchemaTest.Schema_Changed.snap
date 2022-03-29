@@ -37,9 +37,9 @@ type Category implements Node {
   id: ID!
   name: String!
   image: String
-  jokes: [Joke!]!
   users: [User!]!
   joke: Joke!
+  jokes: [Joke!]!
 }
 
 type Joke implements Node {
@@ -55,6 +55,7 @@ type Joke implements Node {
   userJokeHistories: [UserJokeHistory!]!
   users: [User!]!
   jokeReports: [JokeReport!]!
+  categories: [Category!]!
 }
 
 type JokeReport {
@@ -144,6 +145,7 @@ type User implements Node {
   userJokeHistories: [UserJokeHistory!]!
   jokes: [Joke!]!
   jokeReports: [JokeReport!]!
+  categories: [Category!]!
 }
 
 "A connection to a list of items."
@@ -175,6 +177,7 @@ type UserJokeHistory implements Node {
   bookmarked: Boolean!
   rating: RatingValue!
   createdAt: DateTime!
+  joke: Joke!
   user: User!
 }
 

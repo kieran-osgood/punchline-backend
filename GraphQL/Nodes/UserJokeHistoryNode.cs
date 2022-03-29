@@ -1,10 +1,5 @@
-using System.Threading;
-using System.Threading.Tasks;
 using GraphQL.Data;
 using GraphQL.DataLoader;
-using HotChocolate;
-using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace GraphQL.Nodes
 {
@@ -13,6 +8,12 @@ namespace GraphQL.Nodes
     public class UserJokeHistoryNode
     {
         [NodeResolver]
+        public static Task<UserJokeHistory> GetUserJokeHistoryAsync(
+            int id,
+            UserJokeHistoryByIdDataLoader userJokeHistoryById,
+            CancellationToken cancellationToken)
+            => userJokeHistoryById.LoadAsync(id, cancellationToken);
+        
         [BindMember(nameof(UserJokeHistory.Joke), Replace = true)]
         public async Task<Joke> GetJokeAsync(
             [Parent] UserJokeHistory userJokeHistory,
@@ -20,7 +21,6 @@ namespace GraphQL.Nodes
             CancellationToken cancellationToken) =>
             await dataLoader.LoadAsync(userJokeHistory.JokeId, cancellationToken);
         
-        [NodeResolver]
         [BindMember(nameof(UserJokeHistory.User), Replace = true)]
         public async Task<User> GetUserAsync(
             [Parent] UserJokeHistory userJokeHistory,
