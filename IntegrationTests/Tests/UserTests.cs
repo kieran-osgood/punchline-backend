@@ -25,7 +25,7 @@ namespace IntegrationTests.Tests
 						user {
 							id
 							firebaseUid
-							name
+							namr
 							jokeCount
 							categories {
 								id
