@@ -53,13 +53,14 @@ commands:
           command: |
             sudo apt-get update && \
             sudo apt-get install -y dotnet-sdk-6.0
-  install_lambda_tools:
+  install_dotnet_tools:
     steps:
       - run:
           name: Install Dotnet Lambda Tools
           command: |
+            dotnet tool install -g trx2junit
             dotnet tool install -g Amazon.Lambda.Tools
-            export PATH="$PATH:/root/.dotnet/tools"
+            export PATH="$PATH:/root/.dotnet/tools/"
 
 jobs:
   decrypt-secrets:
@@ -104,13 +105,11 @@ jobs:
           name: Unit Tests
           command: 
             dotnet test -c Release --no-build --logger "trx"
+      - install_dotnet_tools
       - run:
           name: Convert test results to .trx 
           when: always
-          command: |
-              dotnet tool install -g trx2junit
-              export PATH="$PATH:/root/.dotnet/tools"
-              trx2junit IntegrationTests/TestResults/*.trx
+          command: trx2junit IntegrationTests/TestResults/*.trx
       - store_test_results:
           path: IntegrationTests/TestResults
       - persist_to_workspace:
@@ -125,7 +124,7 @@ jobs:
           at: .
       - install_microsoft_dotnet_signing_keys
       - install_dotnet_6
-      - install_lambda_tools
+      - install_dotnet_tools
       - run:
           name: Build and Deploy to AWS
           command: make deploy
