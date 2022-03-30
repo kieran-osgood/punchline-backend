@@ -130,6 +130,9 @@ jobs:
       - install_microsoft_dotnet_signing_keys
       - install_dotnet_6
       - install_dotnet_tools
+      - run: 
+          name: Install zip tool (dependency of Amazon.Lambda.Tools - missing from the docker container)
+          command: apt-get -y install zip
       - run:
           name: Build and Deploy to AWS
           command: |
@@ -152,18 +155,3 @@ workflows:
             branches:
               only:
                 - master
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
