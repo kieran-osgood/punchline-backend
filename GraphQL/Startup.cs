@@ -65,10 +65,12 @@ namespace GraphQL
             services.AddSingleton<IIdSerializer, IdSerializer>();
 
             services.AddHttpContextAccessor();
+            
             services
                 .AddGraphQLServer()
                 .AddQueryType()
                 .AddMutationType()
+                .AddAuthorization()
                 // .AddMutationConventions()
                 .AddTypeExtension<JokeQueries>()
                 .AddTypeExtension<CategoryQueries>()
@@ -94,12 +96,10 @@ namespace GraphQL
 
                 .RegisterDbContext<ApplicationDbContext>(DbContextKind.Pooled)
                 .RegisterService<IDbContextFactory<ApplicationDbContext>>(ServiceKind.Synchronized)
-                
                 .AddSorting()
                 .AddFiltering()
                 .AddGlobalObjectIdentification()
                 .SetPagingOptions(new PagingOptions {InferConnectionNameFromField = false})
-                .AddAuthorization()
                 .AddHttpRequestInterceptor((context, executor, builder, token) =>
                 {
                     builder.AddProperty(GlobalStates.HttpContext.Claims, context.User);
