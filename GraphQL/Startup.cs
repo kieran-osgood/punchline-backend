@@ -1,5 +1,3 @@
-using System;
-using System.Net;
 using System.Security.Claims;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -14,18 +12,9 @@ using GraphQL.Entities.User;
 using GraphQL.Entities.UserJokeHistory;
 using GraphQL.Nodes;
 using GraphQL.Repositories.Category;
-using HotChocolate;
 using HotChocolate.AspNetCore;
-using HotChocolate.Data;
 using HotChocolate.Types.Pagination;
-using HotChocolate.Types.Relay;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Path = System.IO.Path;
 
 namespace GraphQL
@@ -50,12 +39,13 @@ namespace GraphQL
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddPooledDbContextFactory<ApplicationDbContext>(x =>
                 x
                     .UseLoggerFactory(MyLoggerFactory)
                     .EnableDetailedErrors()
                     .UseMySQL(_configuration.GetConnectionString("DefaultConnection")));
-
+            
             // ! Controllers?
             services.AddControllers();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
@@ -131,6 +121,7 @@ namespace GraphQL
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseXRay("Punchline", _configuration); // name of the app
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -151,11 +142,6 @@ namespace GraphQL
                         EnableSchemaRequests = env.IsDevelopment(),
                         Tool = {Enable = env.IsDevelopment()}
                     });
-                endpoints.MapGet("/test", async context =>
-                {
-                    await context.Response.WriteAsync("Welcome to running ASP.NET Core on AWS Lambda");
-                });
-
             });
         }
     }
