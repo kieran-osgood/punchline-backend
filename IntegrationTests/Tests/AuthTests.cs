@@ -13,7 +13,7 @@ namespace IntegrationTests.Tests
         [Theory]
         [InlineData(@"query Jokes {jokes(input: {jokeLengths: []}) {nodes {id}}}")]
         [InlineData(@"query Category {categories {nodes {id}}}")]
-        [InlineData(@"query GetUserCategories {categories {nodes {id}}}")]
+        [InlineData(@"query GetUserCategories {userCategories {nodes {id}}}")]
         [InlineData(@"query UserJokeHistoryBookmarks {userJokeHistoryByUserId {nodes {id}}}")]
         public async Task Unauthenticated_Request_On_Authorized_Endpoint_Denies_Access(string query)
         {
