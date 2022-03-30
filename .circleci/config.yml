@@ -97,13 +97,15 @@ jobs:
           name: Unit Tests
           command: 
             dotnet test -c Release --no-build --logger "trx"
+      - run: ls
+      - run: pwd
       - run:
-          name: test results
+          name: Convert test results to .trx 
           when: always
           command: |
               dotnet tool install -g trx2junit
               export PATH="$PATH:/root/.dotnet/tools"
-              trx2junit ./**/TestResults/*.trx
+              trx2junit IntegrationTests/TestResults/*.trx
       - store_test_results:
           path: IntegrationTests/TestResults
       - persist_to_workspace:
