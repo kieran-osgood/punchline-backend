@@ -97,7 +97,7 @@ jobs:
           name: Unit Tests
           command: 
             dotnet test -c Release --no-build --logger "trx"
-        - run:
+      - run:
           name: test results
           when: always
           command: |
