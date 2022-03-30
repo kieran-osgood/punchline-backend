@@ -3,8 +3,6 @@ version: 2.1
 orbs:
   win: circleci/windows@2.2.0
   aws-cli: circleci/aws-cli@2.0.3
-  aws-ecr: circleci/aws-ecr@7.2.0
-  aws-ecs: circleci/aws-ecs@02.2.1
 
 commands:
   aws_decrypt:
@@ -38,6 +36,24 @@ commands:
   transfer_secrets:
     steps:
       - run: cp -a ~/project/decrypted-files/. ~/project/GraphQL
+  install_microsoft_dotnet_signing_keys:
+    steps:
+      - run:
+          name: Install dotnet-microsoft signing keys
+          command: |
+            sudo apt-get update; \
+            sudo apt-get install -y apt-transport-https && \
+            wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb 
+            sudo dpkg -i packages-microsoft-prod.deb
+            rm packages-microsoft-prod.deb
+  install_dotnet_6:
+    steps:
+      - run:
+          name: Install dotnet-sdk
+          command: |
+            sudo apt-get update && \
+            sudo apt-get install -y dotnet-sdk-6.0
+
 jobs:
   decrypt-secrets:
     docker:
@@ -64,33 +80,39 @@ jobs:
       - persist_to_workspace:
           paths: .
           root: .
+
   dotnet-build-and-test:
     docker:
       - image: buildpack-deps:trusty
     steps:
       - attach_workspace:
           at: .
+      - install_microsoft_dotnet_signing_keys
+      - install_dotnet_6
       - run:
-          name: install dotnet-microsoft signing keys
-          command: |
-            sudo apt-get update; \
-            sudo apt-get install -y apt-transport-https && \
-            wget https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb 
-            sudo dpkg -i packages-microsoft-prod.deb
-            rm packages-microsoft-prod.deb
-      - run:
-          name: install dotnet-sdk
-          command: |
-            sudo apt-get update && \
-            sudo apt-get install -y dotnet-sdk-5.0
-      - run:
-          name: Build Build and Test App
+          name: Build
           command: |
             dotnet build -c Release
+      - run:
+          name: Unit Tests
+          command: 
             dotnet test -c Release
       - persist_to_workspace:
           paths: .
           root: .
+
+  aws-lambda-deploy:
+    docker:
+      - image: buildpack-deps:trusty
+    steps:
+      - attach_workspace:
+          at: .
+      - install_microsoft_dotnet_signing_keys
+      - install_dotnet_6
+      - run:
+          name: Build and Deploy to AWS
+          command: make deploy
+
 # WorkFlows
 workflows:
   # Only runs on the develop branch 
@@ -100,26 +122,9 @@ workflows:
       - dotnet-build-and-test:
           requires:
             - decrypt-secrets
-      - aws-ecr/build-and-push-image:
-          checkout: false
-          attach-workspace: true
-          workspace-root: .
-          repo: "${AWS_RESOURCE_NAME_PREFIX}"
-          tag: "${CIRCLE_SHA1}"
-          profile-name: iamadmin-punchline
+      - aws-lambda-deploy:
           requires:
             - dotnet-build-and-test
-          filters:
-            branches:
-              only:
-                - master
-      - aws-ecs/deploy-service-update:
-          requires:
-            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
-          family: "container-of-${AWS_RESOURCE_NAME_PREFIX}"
-          service-name: "${AWS_RESOURCE_NAME_PREFIX}-service"
-          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-          container-image-name-updates: "container=container-of-${AWS_RESOURCE_NAME_PREFIX},tag=${CIRCLE_SHA1}"
           filters:
             branches:
               only:
