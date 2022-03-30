@@ -60,8 +60,11 @@ commands:
           command: |
             dotnet tool install -g trx2junit
             dotnet tool install -g Amazon.Lambda.Tools
-            export PATH="$PATH:/root/.dotnet/tools/"
-
+  export_dotnet_tools_path:
+    steps:
+      - run:
+          name: Export Dotnet Tools Path
+          command: export PATH="$PATH:/root/.dotnet/tools/"
 jobs:
   decrypt-secrets:
     docker:
@@ -109,7 +112,9 @@ jobs:
       - run:
           name: Convert test results to .trx 
           when: always
-          command: trx2junit IntegrationTests/TestResults/*.trx
+          command: |
+            export PATH="$PATH:/root/.dotnet/tools/"
+            trx2junit IntegrationTests/TestResults/*.trx
       - store_test_results:
           path: IntegrationTests/TestResults
       - persist_to_workspace:
@@ -127,7 +132,9 @@ jobs:
       - install_dotnet_tools
       - run:
           name: Build and Deploy to AWS
-          command: make deploy
+          command: |
+            export PATH="$PATH:/root/.dotnet/tools/"
+            make deploy
 
 # WorkFlows
 workflows:
